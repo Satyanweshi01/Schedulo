@@ -1,3 +1,3 @@
-# Class Scheuduar App
+# Class Scheduler App
 
-A Class Scheuduar App for `MD` Sir.
+A Class Scheduler App for `MD` Sir.
