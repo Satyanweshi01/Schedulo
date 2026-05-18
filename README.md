@@ -54,11 +54,4 @@ Python version we are using - `3.12.0`
     - end_time
 
 ### Data model process -
-Teacher
-Subject
-Batch
-TimeSlot
-↓
-TimetableEntry
-↓
-Timetable
+Teacher, Subject, Batch, TimeSlot -> TimetableEntry -> Timetable
