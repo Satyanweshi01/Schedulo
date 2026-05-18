@@ -7,21 +7,24 @@ virtual env for sankha -`.venv\Scripts\activate.bat`
 
 Python version we are using - `3.12.0`
 
-### Protocols - 
-#### Before contributing- 
-1. Activate .venv
-2. `git pull` - before any code push
+### Protocols-
+
+#### Before contributing-
+
+1. Activate .venv - `.venv/Scripts/Activate`(For Windows)
+2. `git checkout dev` - to confirm you are making changes on the development branch
+3. `git pull` - before any code push
+
 #### Push protocol-
+
 1. `git status` - to check the status
-2. Inform the team about the code push (to avoid git merge conflict)
-3. `git add CHANGED_FILE_NAME` - do not use .
-4. `git commit -m "MESSAGE"`
+2. Inform the team about the code push (to avoid git **merge conflict**)
+3. `git add CHANGED_FILE_NAME` - do not use `add .`
+4. `git commit -m "COMMIT_MESSAGE"`
 5. `git push`
 
+### Objects to create-
 
-
-
-### Objects to create- 
 - TimetableEntry -> each timetable cell should be a object itself
     - id
     - day
@@ -30,7 +33,7 @@ Python version we are using - `3.12.0`
     - subject_id
     - status
 
-- Faculty 
+- Faculty
     - id
     - name
     - department
