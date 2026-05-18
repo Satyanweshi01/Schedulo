@@ -27,19 +27,38 @@ Python version we are using - `3.12.0`
 
 - TimetableEntry -> each timetable cell should be a object itself
     - id
-    - day
-    - slot
-    - faculty_id
-    - subject_id
-    - status
+    - teacher
+    - batch
+    - subject
+    - time_slot
 
-- Faculty
+- Teacher
     - id
     - name
     - department
     - subject
 
+- Batch
+    - id
+    - name
+    - year
+
 - Subject
     - id
     - name
     - code
+
+- Timeslot
+    - day
+    - start_time
+    - end_time
+
+### Data model process -
+Teacher
+Subject
+Batch
+TimeSlot
+↓
+TimetableEntry
+↓
+Timetable
