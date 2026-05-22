@@ -89,6 +89,8 @@ Teacher, Batch, Department, Subject, TimeSlot -> TimetableEntry -> Timetable
     - models -> have all the data models
     - static -> one shared static folder for all the blueprints
     - `__init__`.py -> the main flask application file to combine all the blueprints and return the flask app object.
+    - config.py -> contains a Config class which store all the configuration needed for the flask app.
+    - extensions.py -> contains all the extra needed object e.g. - database initialisation, migration initialisation etc.
 - .gitignore -> to avoid uploading unnecessary folders
 - LICENCE -> for licencing
 - README.md -> for documentation purpose
