@@ -4,6 +4,7 @@ class TimetableEditor {
     this.teachers = [];
     this.history = [];
     this.currentWeek = 1;
+    this.selectedTeacher = null;
     this.colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#fa709a', '#fee140', '#4facfe', '#00f2fe'];
     this.colorMap = {};
     this.init();
@@ -16,45 +17,58 @@ class TimetableEditor {
     this.renderTeachers();
   }
 
-  // 1. DRAG & DROP
-  setupDragDrop() {
+  // 1. SELECT & CLICK (Like Excel)
+  setupSelectClick() {
+    // Teacher card selection
     const cards = document.querySelectorAll('.card');
     cards.forEach(card => {
-      card.draggable = true;
-      card.addEventListener('dragstart', (e) => this.handleDragStart(e));
+      card.addEventListener('click', (e) => this.selectTeacher(e));
     });
 
-    const boxes = document.querySelectorAll('.box:not(.th):not(.day)');
+    // Cell placement
+    const boxes = document.querySelectorAll('.box:not(.th):not(.day):not(.recess)');
     boxes.forEach(box => {
-      box.addEventListener('dragover', (e) => this.handleDragOver(e));
-      box.addEventListener('drop', (e) => this.handleDrop(e));
-      box.addEventListener('dragleave', () => box.classList.remove('drag-over'));
+      box.addEventListener('click', (e) => this.placeTeacherInCell(e));
     });
   }
 
-  handleDragStart(e) {
-    const teacher = e.target.textContent;
-    e.dataTransfer.effectAllowed = 'copy';
-    e.dataTransfer.setData('teacher', teacher);
-    e.target.classList.add('dragging');
+  selectTeacher(e) {
+    e.stopPropagation();
+    const card = e.target.closest('.card');
+
+    // Deselect if clicking same teacher again
+    if (this.selectedTeacher === card.textContent) {
+      this.selectedTeacher = null;
+      card.classList.remove('teacher-selected');
+      return;
+    }
+
+    // Deselect previous teacher
+    const previousSelected = document.querySelector('.teacher-selected');
+    if (previousSelected) {
+      previousSelected.classList.remove('teacher-selected');
+    }
+
+    // Select new teacher
+    this.selectedTeacher = card.textContent;
+    card.classList.add('teacher-selected');
   }
 
-  handleDragOver(e) {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'copy';
-    e.target.classList.add('drag-over');
-  }
+  placeTeacherInCell(e) {
+    e.stopPropagation();
 
-  handleDrop(e) {
-    e.preventDefault();
-    e.target.classList.remove('drag-over');
-    const teacher = e.dataTransfer.getData('teacher');
-    const cellId = e.target.getAttribute('data-id');
+    if (!this.selectedTeacher) {
+      alert('Please select a teacher first!');
+      return;
+    }
 
-    if (cellId && teacher) {
-      this.addTeacherToCell(cellId, teacher);
+    const cell = e.target;
+    const cellId = cell.getAttribute('data-id');
+
+    if (cellId) {
+      this.addTeacherToCell(cellId, this.selectedTeacher);
       this.saveToLocalStorage();
-      this.addHistory('Added ' + teacher + ' to cell');
+      this.addHistory('Added ' + this.selectedTeacher + ' to cell');
     }
   }
 
@@ -245,7 +259,7 @@ class TimetableEditor {
   showTooltip(e) {
     const tooltip = document.createElement('div');
     tooltip.classList.add('tooltip');
-    tooltip.textContent = `${e.target.textContent} - Click to select or drag to cell`;
+    tooltip.textContent = `${e.target.textContent} - Click to select, then click a cell`;
     e.target.appendChild(tooltip);
   }
 
@@ -334,7 +348,7 @@ class TimetableEditor {
     });
 
     this.setupClickEdit();
-    this.setupDragDrop();
+    this.setupSelectClick();
   }
 
   renderTeachers() {
@@ -347,7 +361,7 @@ class TimetableEditor {
       card.textContent = this.teachers[index] || card.textContent;
     });
 
-    this.setupDragDrop();
+    this.setupSelectClick();
     this.setupTooltips();
     this.setupSearch();
   }
@@ -374,5 +388,5 @@ class TimetableEditor {
 document.addEventListener('DOMContentLoaded', () => {
   window.timetableEditor = new TimetableEditor();
   console.log('Timetable Editor Initialized');
-  console.log('Features: Drag & Drop | Search | Click Edit | Navigation | Animations | Local Storage | PDF Export | Color Coding | Tooltips | Undo/Redo | Keyboard Shortcuts');
+  console.log('Features: Select & Click | Search | Click Edit | Navigation | Animations | Local Storage | PDF Export | Color Coding | Tooltips | Undo/Redo | Keyboard Shortcuts');
 });
