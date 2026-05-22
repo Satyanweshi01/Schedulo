@@ -73,8 +73,9 @@ Teacher, Batch, Department, Subject, TimeSlot -> TimetableEntry -> Timetable
             - routes.py -> contains all the routes
     - models -> have all the data models
     - static -> one shared static folder for all the blueprints
-    - app.py -> the main flask application file to combine all the blueprints
+    - `__init__`.py -> the main flask application file to combine all the blueprints and return the flask app object.
 - .gitignore -> to avoid uploading unnecessary folders
 - LICENCE -> for licencing
 - README.md -> for documentation purpose
 - requirments.txt -> to list all the needed library
+- run.py -> the main python file which calls the `create_app()` and starts the server.
