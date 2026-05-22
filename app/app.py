@@ -1,5 +1,5 @@
 from flask import Flask
-from blueprints.editor.editor import editor_bp # importing the editor blueprint object
+from blueprints.editor import editor_bp # importing the editor blueprint object
 
 app = Flask(__name__)
 app.register_blueprint(editor_bp, url_prefix = "/editor") # registering the editor blue print object
