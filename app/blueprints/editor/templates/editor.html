@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Schedulo Editor</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/editor.css') }}" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     </head>
     <body>
         <main>
@@ -111,5 +112,6 @@
                 </div>
             </div>
         </main>
+        <script src="{{ url_for('static', filename='js/editor.js') }}"></script>
     </body>
 </html>
