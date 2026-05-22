@@ -113,6 +113,109 @@ main {
     border-radius: 10px;
 }
 
+/* STREAMS SECTION */
+.streams-section {
+    width: 90%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 15px;
+    border: 2px solid rgba(102, 126, 234, 0.2);
+}
+
+.section-title {
+    grid-column: 1 / -1;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #667eea;
+    text-align: center;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.stream-card {
+    background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+    width: 100%;
+    min-height: 70px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    color: white;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(0, 153, 255, 0.4);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 1.1rem;
+    text-align: center;
+    padding: 10px;
+}
+
+.stream-card:nth-child(2) {
+    background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+}
+
+.stream-card:nth-child(3) {
+    background: linear-gradient(135deg, #00ffb4 0%, #00cc88 100%);
+}
+
+.stream-card:nth-child(4) {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+}
+
+.stream-card:nth-child(5) {
+    background: linear-gradient(135deg, #ffa502 0%, #ff8c00 100%);
+}
+
+.stream-card:hover {
+    transform: translateY(-6px) scale(1.05);
+    box-shadow: 0 15px 40px rgba(0, 153, 255, 0.6);
+}
+
+.stream-card:nth-child(3):hover {
+    box-shadow: 0 15px 40px rgba(0, 204, 136, 0.6);
+}
+
+.stream-card:nth-child(4):hover {
+    box-shadow: 0 15px 40px rgba(255, 107, 107, 0.6);
+}
+
+.stream-card:nth-child(5):hover {
+    box-shadow: 0 15px 40px rgba(255, 165, 2, 0.6);
+}
+
+.stream-card.stream-selected {
+    transform: scale(1.08) !important;
+    box-shadow: 0 18px 50px rgba(0, 153, 255, 0.8) !important;
+    border: 3px solid white !important;
+    filter: brightness(1.1);
+}
+
+.stream-card:nth-child(3).stream-selected {
+    box-shadow: 0 18px 50px rgba(0, 204, 136, 0.8) !important;
+}
+
+.stream-card:nth-child(4).stream-selected {
+    box-shadow: 0 18px 50px rgba(255, 107, 107, 0.8) !important;
+}
+
+.stream-card:nth-child(5).stream-selected {
+    box-shadow: 0 18px 50px rgba(255, 165, 2, 0.8) !important;
+}
+
+/* TEACHERS SECTION */
+.teachers-section {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
 .search {
     min-width: 240px;
     height: 45px;

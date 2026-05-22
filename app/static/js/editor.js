@@ -8,6 +8,7 @@ class TimetableEditor {
     this.colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#fa709a', '#fee140', '#4facfe', '#00f2fe'];
     this.colorMap = {};
     this.eventListenersAdded = false;
+    this.streams = ['CSE', 'CSE(AIML)', 'ECE', 'IOT'];
     this.init();
   }
 
@@ -18,15 +19,22 @@ class TimetableEditor {
     this.renderTeachers();
   }
 
-  // 1. SELECT & CLICK (Like Excel)
+  // 1. SELECT & CLICK (Like Excel) - Teachers and Streams
   setupSelectClick() {
-    if (this.eventListenersAdded) return; // Prevent duplicate listeners
+    if (this.eventListenersAdded) return;
 
     // Teacher card selection
     const cards = document.querySelectorAll('.card');
     cards.forEach(card => {
       card.style.cursor = 'pointer';
       card.addEventListener('click', (e) => this.selectTeacher(e));
+    });
+
+    // Stream card selection
+    const streamCards = document.querySelectorAll('.stream-card');
+    streamCards.forEach(card => {
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', (e) => this.selectStream(e));
     });
 
     // Cell placement with hover delete button
@@ -37,10 +45,90 @@ class TimetableEditor {
       box.addEventListener('click', (e) => this.placeTeacherInCell(e));
       box.addEventListener('mouseenter', (e) => this.showDeleteButton(e));
       box.addEventListener('mouseleave', (e) => this.hideDeleteButton(e));
-      box.addEventListener('contextmenu', (e) => this.deleteTeacherFromCell(e)); // Right-click to delete
+      box.addEventListener('contextmenu', (e) => this.deleteTeacherFromCell(e));
     });
 
     this.eventListenersAdded = true;
+  }
+
+  selectStream(e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    const card = e.target.closest('.stream-card');
+    if (!card) return;
+
+    const streamName = card.textContent.trim();
+
+    // Deselect if clicking same stream again
+    if (this.selectedTeacher === streamName) {
+      this.selectedTeacher = null;
+      card.classList.remove('stream-selected');
+      console.log('Stream deselected');
+      return;
+    }
+
+    // Deselect previous selection (teacher or stream)
+    const previousSelected = document.querySelector('.teacher-selected, .stream-selected');
+    if (previousSelected) {
+      previousSelected.classList.remove('teacher-selected', 'stream-selected');
+    }
+
+    // Select new stream
+    this.selectedTeacher = streamName;
+    card.classList.add('stream-selected');
+    console.log('Selected stream:', this.selectedTeacher);
+  }
+
+  selectTeacher(e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    const card = e.target.closest('.card');
+    if (!card) return;
+
+    const teacherName = card.textContent.trim();
+
+    // Deselect if clicking same teacher again
+    if (this.selectedTeacher === teacherName) {
+      this.selectedTeacher = null;
+      card.classList.remove('teacher-selected');
+      console.log('Teacher deselected');
+      return;
+    }
+
+    // Deselect previous selection (teacher or stream)
+    const previousSelected = document.querySelector('.teacher-selected, .stream-selected');
+    if (previousSelected) {
+      previousSelected.classList.remove('teacher-selected', 'stream-selected');
+    }
+
+    // Select new teacher
+    this.selectedTeacher = teacherName;
+    card.classList.add('teacher-selected');
+    console.log('Selected teacher:', this.selectedTeacher);
+  }
+
+  placeTeacherInCell(e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    const cell = e.target.closest('.box:not(.th):not(.day):not(.recess)');
+    if (!cell) return;
+
+    if (!this.selectedTeacher) {
+      console.warn('No teacher/stream selected');
+      return;
+    }
+
+    const cellId = cell.getAttribute('data-id');
+
+    if (cellId) {
+      this.addTeacherToCell(cellId, this.selectedTeacher);
+      this.saveToLocalStorage();
+      this.addHistory('Added ' + this.selectedTeacher + ' to cell');
+      console.log('Placed in cell:', cellId);
+    }
   }
 
   showDeleteButton(e) {
@@ -48,13 +136,11 @@ class TimetableEditor {
     if (!cell) return;
 
     const content = cell.textContent.trim();
-    if (!content) return; // Don't show button if cell is empty
+    if (!content) return;
 
-    // Remove existing button if any
     const existingBtn = cell.querySelector('.delete-btn');
     if (existingBtn) existingBtn.remove();
 
-    // Create delete button
     const deleteBtn = document.createElement('button');
     deleteBtn.classList.add('delete-btn');
     deleteBtn.innerHTML = '✕';
@@ -119,57 +205,6 @@ class TimetableEditor {
     console.log('Cell cleared:', cellId);
   }
 
-  selectTeacher(e) {
-    e.stopPropagation();
-    e.preventDefault();
-
-    const card = e.target.closest('.card');
-    if (!card) return;
-
-    const teacherName = card.textContent.trim();
-
-    // Deselect if clicking same teacher again
-    if (this.selectedTeacher === teacherName) {
-      this.selectedTeacher = null;
-      card.classList.remove('teacher-selected');
-      console.log('Teacher deselected');
-      return;
-    }
-
-    // Deselect previous teacher
-    const previousSelected = document.querySelector('.teacher-selected');
-    if (previousSelected) {
-      previousSelected.classList.remove('teacher-selected');
-    }
-
-    // Select new teacher
-    this.selectedTeacher = teacherName;
-    card.classList.add('teacher-selected');
-    console.log('Selected teacher:', this.selectedTeacher);
-  }
-
-  placeTeacherInCell(e) {
-    e.stopPropagation();
-    e.preventDefault();
-
-    const cell = e.target.closest('.box:not(.th):not(.day):not(.recess)');
-    if (!cell) return;
-
-    if (!this.selectedTeacher) {
-      console.warn('No teacher selected');
-      return;
-    }
-
-    const cellId = cell.getAttribute('data-id');
-
-    if (cellId) {
-      this.addTeacherToCell(cellId, this.selectedTeacher);
-      this.saveToLocalStorage();
-      this.addHistory('Added ' + this.selectedTeacher + ' to cell');
-      console.log('Teacher placed in cell:', cellId);
-    }
-  }
-
   deleteTeacherFromCell(e) {
     e.stopPropagation();
     e.preventDefault();
@@ -185,11 +220,9 @@ class TimetableEditor {
       return;
     }
 
-    // Confirm deletion
     if (confirm(`Delete "${currentContent}" from this cell?`)) {
       this.timetable[cellId] = '';
       cell.textContent = '';
-      cell.style.background = '';
       this.saveToLocalStorage();
       this.addHistory('Deleted ' + currentContent + ' from cell');
       console.log('Cell cleared:', cellId);
@@ -372,7 +405,7 @@ class TimetableEditor {
 
   // 9. TOOLTIPS
   setupTooltips() {
-    const cards = document.querySelectorAll('.card');
+    const cards = document.querySelectorAll('.card, .stream-card');
     cards.forEach(card => {
       card.addEventListener('mouseenter', (e) => this.showTooltip(e));
       card.addEventListener('mouseleave', (e) => this.hideTooltip(e));
@@ -505,6 +538,6 @@ class TimetableEditor {
 document.addEventListener('DOMContentLoaded', () => {
   window.timetableEditor = new TimetableEditor();
   console.log('Timetable Editor Initialized');
-  console.log('Features: Select & Click | Search | Click Edit | Navigation | Animations | Local Storage | PDF Export | Color Coding | Tooltips | Undo/Redo | Keyboard Shortcuts');
-  console.log('Right-click on cells to delete content');
+  console.log('Features: Select & Click (Teachers & Streams) | Search | Click Edit | Navigation | Animations | Local Storage | PDF Export | Color Coding | Tooltips | Undo/Redo | Keyboard Shortcuts');
+  console.log('Right-click on cells to delete content | Hover to see delete button');
 });
