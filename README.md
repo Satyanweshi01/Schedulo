@@ -23,6 +23,20 @@ Python version we are using - `3.12.0`
 4. `git commit -m "COMMIT_MESSAGE"`
 5. `git push`
 
+### Tasks to complete
+- [x] Restructure the entire project and split the responsibilities for modularity
+- [ ] SQLite Database creation 
+    - Create extensions.py in app directory
+    - Establish db object
+- [ ] Centralized configuration file creation for easier key access
+    - Create a config.py in app directory
+- [ ] Create a stable schemas and data models 
+    - Plan the data schemas on paper for clarity
+    - Create various sqlalchemy schema objects
+    - Test CRUD operation by using it
+- [ ] Establish migration - for interecting with the database schema
+
+
 ### Objects-
 - Timetable
     - id
@@ -80,3 +94,4 @@ Teacher, Batch, Department, Subject, TimeSlot -> TimetableEntry -> Timetable
 - README.md -> for documentation purpose
 - requirments.txt -> to list all the needed library
 - run.py -> the main python file which calls the `create_app()` and starts the server.
+
