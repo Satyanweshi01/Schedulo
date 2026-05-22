@@ -63,3 +63,14 @@ Python version we are using - `3.12.0`
 
 ### Data model process -
 Teacher, Batch, Department, Subject, TimeSlot -> TimetableEntry -> Timetable
+
+### File Structure
+- app -> main app 
+    - blueprints -> contains all the flask blueprints
+    - models -> have all the data models
+    - static -> one shared static folder for all the blueprints
+    - app.py -> the main flask application file to combine all the blueprints
+- .gitignore -> to avoid uploading unnecessary folders
+- LICENCE -> for licencing
+- README.md -> for documentation purpose
+- requirments.txt -> to list all the needed library

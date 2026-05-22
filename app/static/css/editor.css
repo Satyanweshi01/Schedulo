@@ -132,7 +132,7 @@ main {
     height: 50px;
     border: none;
 
-    background-image: url("../static/arrow.png");
+    background-image: url("./arrow.png");
     background-repeat: no-repeat;
     background-position: center;
     object-fit: contain;
