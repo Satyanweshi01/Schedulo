@@ -69,7 +69,7 @@ Teacher, Batch, Department, Subject, TimeSlot -> TimetableEntry -> Timetable
     - blueprints -> contains all the flask blueprints
         - editor -> contains editor blueprint
             - templates -> contains all the editor's templates
-            - __init__.py -> editor blueprint initialisation. entry ofthe editor as package
+            - `__init__`.py -> editor blueprint initialisation. entry ofthe editor as package
             - routes.py -> contains all the routes
     - models -> have all the data models
     - static -> one shared static folder for all the blueprints
