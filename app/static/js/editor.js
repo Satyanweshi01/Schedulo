@@ -5,6 +5,7 @@ class TimetableEditor {
     this.history = [];
     this.currentWeek = 1;
     this.selectedTeacher = null;
+    this.selectedTeacherId = null;
     this.colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#fa709a', '#fee140', '#4facfe', '#00f2fe'];
     this.colorMap = {};
     this.init();
@@ -35,9 +36,12 @@ class TimetableEditor {
   selectTeacher(e) {
     e.stopPropagation();
     const card = e.target.closest('.card');
+    const teacherId = card.getAttribute('data-teacher-id') || card.textContent;
+    const teacherName = card.textContent;
 
     // Deselect if clicking same teacher again
-    if (this.selectedTeacher === card.textContent) {
+    if (this.selectedTeacherId === teacherId) {
+      this.selectedTeacherId = null;
       this.selectedTeacher = null;
       card.classList.remove('teacher-selected');
       return;
@@ -50,7 +54,8 @@ class TimetableEditor {
     }
 
     // Select new teacher
-    this.selectedTeacher = card.textContent;
+    this.selectedTeacherId = teacherId;
+    this.selectedTeacher = teacherName;
     card.classList.add('teacher-selected');
   }
 
