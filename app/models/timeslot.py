@@ -1,3 +1,4 @@
+from app.extensions import db
 class Timeslot():
     def __init__(self,day,start_time,end_time):
         self.day = day
