@@ -29,15 +29,94 @@ class TimetableEditor {
       card.addEventListener('click', (e) => this.selectTeacher(e));
     });
 
-    // Cell placement with right-click to delete
+    // Cell placement with hover delete button
     const boxes = document.querySelectorAll('.box:not(.th):not(.day):not(.recess)');
     boxes.forEach(box => {
       box.style.cursor = 'pointer';
+      box.style.position = 'relative';
       box.addEventListener('click', (e) => this.placeTeacherInCell(e));
+      box.addEventListener('mouseenter', (e) => this.showDeleteButton(e));
+      box.addEventListener('mouseleave', (e) => this.hideDeleteButton(e));
       box.addEventListener('contextmenu', (e) => this.deleteTeacherFromCell(e)); // Right-click to delete
     });
 
     this.eventListenersAdded = true;
+  }
+
+  showDeleteButton(e) {
+    const cell = e.target.closest('.box');
+    if (!cell) return;
+
+    const content = cell.textContent.trim();
+    if (!content) return; // Don't show button if cell is empty
+
+    // Remove existing button if any
+    const existingBtn = cell.querySelector('.delete-btn');
+    if (existingBtn) existingBtn.remove();
+
+    // Create delete button
+    const deleteBtn = document.createElement('button');
+    deleteBtn.classList.add('delete-btn');
+    deleteBtn.innerHTML = '✕';
+    deleteBtn.style.position = 'absolute';
+    deleteBtn.style.top = '5px';
+    deleteBtn.style.right = '5px';
+    deleteBtn.style.width = '25px';
+    deleteBtn.style.height = '25px';
+    deleteBtn.style.borderRadius = '50%';
+    deleteBtn.style.border = 'none';
+    deleteBtn.style.backgroundColor = '#ff4757';
+    deleteBtn.style.color = 'white';
+    deleteBtn.style.cursor = 'pointer';
+    deleteBtn.style.fontSize = '16px';
+    deleteBtn.style.fontWeight = 'bold';
+    deleteBtn.style.display = 'flex';
+    deleteBtn.style.alignItems = 'center';
+    deleteBtn.style.justifyContent = 'center';
+    deleteBtn.style.zIndex = '100';
+    deleteBtn.style.transition = 'all 0.2s ease';
+
+    deleteBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      this.clearCellContent(cell);
+    });
+
+    deleteBtn.addEventListener('mouseenter', () => {
+      deleteBtn.style.backgroundColor = '#ff3838';
+      deleteBtn.style.transform = 'scale(1.1)';
+    });
+
+    deleteBtn.addEventListener('mouseleave', () => {
+      deleteBtn.style.backgroundColor = '#ff4757';
+      deleteBtn.style.transform = 'scale(1)';
+    });
+
+    cell.appendChild(deleteBtn);
+  }
+
+  hideDeleteButton(e) {
+    const cell = e.target.closest('.box');
+    if (!cell) return;
+
+    const deleteBtn = cell.querySelector('.delete-btn');
+    if (deleteBtn) {
+      deleteBtn.remove();
+    }
+  }
+
+  clearCellContent(cell) {
+    const cellId = cell.getAttribute('data-id');
+    const content = cell.textContent.trim();
+
+    if (!content) return;
+
+    this.timetable[cellId] = '';
+    cell.textContent = '';
+    cell.style.background = '';
+    this.saveToLocalStorage();
+    this.addHistory('Deleted ' + content + ' from cell');
+    console.log('Cell cleared:', cellId);
   }
 
   selectTeacher(e) {

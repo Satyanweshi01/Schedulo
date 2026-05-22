@@ -301,11 +301,44 @@ main {
 
 .editable {
     cursor: pointer;
+    position: relative;
 }
 
 .editable:hover {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
     color: white;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 5px !important;
+    right: 5px !important;
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 50% !important;
+    border: none !important;
+    background-color: #ff4757 !important;
+    color: white !important;
+    cursor: pointer !important;
+    font-size: 18px !important;
+    font-weight: bold !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 100 !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 4px 12px rgba(255, 71, 87, 0.4) !important;
+    padding: 0 !important;
+}
+
+.delete-btn:hover {
+    background-color: #ff3838 !important;
+    transform: scale(1.15) !important;
+    box-shadow: 0 6px 18px rgba(255, 71, 87, 0.6) !important;
+}
+
+.delete-btn:active {
+    transform: scale(0.95) !important;
 }
 
 /* INPUT STYLING */
