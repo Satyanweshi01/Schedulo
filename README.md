@@ -23,7 +23,10 @@ Python version we are using - `3.12.0`
 4. `git commit -m "COMMIT_MESSAGE"`
 5. `git push`
 
-### Objects to create-
+### Objects-
+- Timetable
+    - id
+    - entries as list
 
 - TimetableEntry -> each timetable cell should be a object itself
     - id
@@ -43,6 +46,11 @@ Python version we are using - `3.12.0`
     - name
     - year
 
+- Department
+    - id 
+    - name
+    - year
+
 - Subject
     - id
     - name
@@ -54,4 +62,4 @@ Python version we are using - `3.12.0`
     - end_time
 
 ### Data model process -
-Teacher, Subject, Batch, TimeSlot -> TimetableEntry -> Timetable
+Teacher, Batch, Department, Subject, TimeSlot -> TimetableEntry -> Timetable
