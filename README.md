@@ -108,24 +108,22 @@ Teacher, Batch, Department, Subject, TimeSlot -> TimetableEntry -> Timetable
 #### HTML (editor.html)
 - **Schedule Grid**: 5x9 table layout showing days (Mon-Fri) and 9 time slots (10:00-17:20)
 - **Recess Indicators**: Marked in red for break times at position 12:30-1:20
-- **Faculty Panel**: Right sidebar with search box and teacher cards for assignment
-- **Control Panel**: Bottom section with week navigation and PDF export button
+- **Faculty Panel**: Right sidebar with search box and teacher cards for selection
+- **Control Panel**: Bottom section with OK button and PDF export button
 
 #### CSS (editor.css)
 - **Grid Layout**: Responsive CSS Grid for main layout (4fr 1fr columns, 8fr 1fr rows)
 - **Color Scheme**: Light theme with highlights for interactive elements
-- **Hover Effects**: Visual feedback for clickable cells and buttons
+- **Hover Effects**: Visual feedback for clickable elements
 - **Selection States**: Green highlight for selected teachers
-- **Responsive Design**: Flexbox for faculty cards and control buttons
+- **Button Styling**: OK button (orange) and Download PDF button (green) with hover effects
 
 #### JavaScript (editor.js)
-- **Schedule State Management**: Global state object managing all schedule data
-- **Cell Editing**: Click any time slot to add subject name (prompt-based input)
-- **Teacher Selection**: Click teacher cards to select; selected teacher assigned to entries
-- **Week Navigation**: Previous/Next buttons to navigate weeks with date updates
+- **Schedule State Management**: Global state object managing all schedule data (no persistence)
+- **Teacher Selection**: Click teacher cards to select; selected teacher tracked in state
 - **Search Filter**: Real-time filtering of teacher cards by name
-- **Local Storage**: Auto-saves schedule to browser storage for persistence
-- **JSON Export**: Generates structured JSON file with schedule metadata
+- **JSON Storage**: Stores schedule JSON in variable when "OK" button is pressed (not downloaded)
+- **Backend Ready**: Stored JSON accessible via `getStoredJSON()` for backend processing
 
 ### How to Use the Schedulo Editor
 
@@ -135,77 +133,70 @@ Teacher, Batch, Department, Subject, TimeSlot -> TimetableEntry -> Timetable
    - Run: `python run.py`
    - Open browser to the editor route
 
-2. **Adding Subjects to Schedule**:
-   - Click on any empty time slot cell
-   - Enter subject name in the prompt dialog
-   - Subject appears in the cell with light green background
-
-3. **Assigning Teachers**:
+2. **Selecting Teachers**:
    - Click a teacher card from the right panel to select (turns green)
-   - Add subjects after selecting - teacher is recorded with the entry
-   - Can change selection by clicking another teacher
+   - Only one teacher can be selected at a time
 
-4. **Searching Teachers**:
+3. **Searching Teachers**:
    - Type in the search box to filter teacher list
    - Search is case-insensitive and matches partial names
 
-5. **Navigating Weeks**:
-   - Click the left arrow (◄) to go to previous week
-   - Click the right arrow (►) to go to next week
-   - Date range updates automatically in the control panel
+4. **Storing Schedule Data**:
+   - Click "OK" button to store schedule JSON in a variable
+   - A confirmation message displays when data is stored
+   - Stored data is ready to be submitted to backend
 
-6. **Exporting Schedule**:
-   - Click "Download PDF" button to export schedule as JSON
-   - JSON file includes:
-     - Metadata (export date, week range, institution)
-     - Complete schedule structure (day → time slot → subject/teacher/stream)
-     - List of all teachers
-   - Also accessible via browser console: `downloadScheduleJSON()`
-   - Or clear schedule: `clearSchedule()`
+5. **Exporting to PDF** (placeholder):
+   - Click "Download PDF" button for future PDF export functionality
 
-#### JSON Export Format
+#### JSON Structure
+The JSON stored in the variable when "OK" is pressed contains:
 ```json
 {
   "metadata": {
-    "exportDate": "2026-05-23T12:00:00.000Z",
-    "weekStart": "23 May 2026",
-    "weekEnd": "27 May 2026",
+    "creationDate": "2026-05-23T12:00:00.000Z",
     "institution": "Your Institution Name"
   },
   "schedule": {
     "Monday": {
       "10:00-10:50": {
-        "subject": "Mathematics",
-        "teacher": "Dr. Smith",
-        "stream": "CSE"
+        "subject": "",
+        "teacher": "",
+        "stream": ""
       },
       ...
-    }
+    },
+    "Tuesday": { ... },
+    "Wednesday": { ... },
+    "Thursday": { ... },
+    "Friday": { ... }
   },
   "teachers": [
     { "id": 1, "name": "Dr. Smith" },
+    { "id": 2, "name": "Prof. Johnson" },
     ...
-  ],
-  "metadata_info": {
-    "description": "Class schedule data exported from Schedulo",
-    "version": "1.0",
-    "format": "JSON"
-  }
+  ]
 }
 ```
 
 #### Browser Console Commands
-- `exportScheduleJSON()` - returns current schedule as JSON object
-- `downloadScheduleJSON()` - downloads schedule as JSON file
-- `clearSchedule()` - clears all schedule data (with confirmation)
+- `getStoredJSON()` - retrieve the stored schedule JSON (returns null if not yet stored)
+- `generateScheduleJSON()` - generate JSON from current schedule state
+- `storeScheduleJSON()` - manually store JSON (same as clicking OK button)
+- `submitScheduleToBackend()` - submit stored JSON to backend (implementation pending)
+
+#### Key Points
+- **No Cell Editing**: Schedule grid is for display only; teacher selection and data is managed via the state
+- **No Local Storage**: All data stays in memory during the session (no persistence between page refreshes)
+- **No Week Navigation**: Fixed schedule view (no date range changes)
+- **Simple Data Flow**: Select teachers → Click OK → JSON is stored → Ready for backend submission
 
 ### Features Summary
-✓ Interactive schedule grid (click to add subjects)
-✓ Teacher selection and assignment
-✓ Week navigation with date tracking
+✓ Interactive teacher selection panel
 ✓ Real-time search filter for teachers
-✓ Automatic data persistence (local storage)
-✓ JSON export with comprehensive metadata
-✓ Responsive UI with visual feedback
+✓ Schedule grid display (5 days × 9 time slots)
+✓ JSON storage in variable for backend processing
+✓ Clean, responsive UI with visual feedback
 ✓ Fully commented code for maintainability
+✓ No persistence (session-only data)
 
