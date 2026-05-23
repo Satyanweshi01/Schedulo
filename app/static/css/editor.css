@@ -1,3 +1,4 @@
+/* Reset all default browser styles */
 * {
     margin: 0;
     padding: 0;
@@ -9,119 +10,143 @@ body {
     background-color: #faf9f6;
 }
 
+/* Main layout using CSS Grid - divides page into table, faculty panel, and controls */
 main {
     height: 100vh;
     width: 100%;
-
     display: grid;
-
     grid-template-columns: 4fr 1fr;
     grid-template-rows: 8fr 1fr;
 }
 
+/* Table area containing the schedule grid (days, times, subjects) */
 .table-area {
-    /* background-color: #892be242; */
-
     padding: 15px;
-
     display: grid;
     grid-template-columns: repeat(11, 1fr);
     grid-template-rows: repeat(6, 1fr);
+    overflow-y: auto;
 }
 
+/* Individual boxes in the schedule grid */
 .box {
     border: 1px solid #000000;
-
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    position: relative;
+    min-height: 60px;
 }
 
+/* Hover effect for empty cells - provides visual feedback when user hovers */
+.box:hover:not(.th):not(.day):not(.recess) {
+    background-color: #e8f4f8;
+}
+
+/* Header cells (time slots) */
 .th {
     width: 100%;
     height: 50%;
     margin-top: 30%;
-
     font-weight: 700;
     font-size: 1.2rem;
+    background-color: #f5f5f5;
 }
 
+/* Day column cells */
 .day {
     font-weight: 550;
-    text-wrap: wrap;
+    background-color: #f9f9f9;
 }
 
+/* Recess/break indicator cells */
 .recess {
     color: #ff0000;
-
     font-weight: 500;
     font-size: 3rem;
-
-    text-wrap: wrap;
+    background-color: #ffe6e6;
 }
 
+/* Right panel displaying faculty/teacher list */
 .faculty-area {
-    /* background-color: #7fffd433; */
-
     width: 100%;
     height: 100%;
-
     overflow-y: auto;
     border: 1px solid #000000;
     margin: 10px 0px 0px 0px;
     padding: 10px;
-
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
     gap: 20px;
+    background-color: #ffffff;
 }
 
+/* Search input field for filtering teachers */
 .search {
-    /* background-color: #ffffff; */
-
     min-width: 250px;
     height: 50px;
     margin-top: 10px;
-
     border: 1px solid #000000;
-
-    position: fixed;
+    padding: 10px;
+    font-size: 1rem;
+    position: sticky;
     top: 0;
+    background-color: #ffffff;
+    z-index: 10;
 }
 
+/* Teacher/faculty card - draggable item for schedule editing */
 .card {
     background-color: #f0f0f0;
-
     width: 80%;
     min-height: 100px;
-
     margin-bottom: 10px;
     border: 1px solid #ddd;
-
+    border-radius: 4px;
     cursor: pointer;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
 }
 
+/* Visual feedback when hovering over a teacher card */
+.card:hover {
+    background-color: #e0e0e0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Card selected state - shows when user selects a teacher to add to schedule */
+.card.selected {
+    background-color: #4CAF50;
+    color: white;
+    border-color: #45a049;
+}
+
+/* Bottom control panel for navigation and PDF export */
 .control-area {
-    /* background-color: #d2691e3a; */
-
     grid-column: 1/3;
-
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid #ddd;
+    background-color: #fafafa;
 }
 
+/* Individual control item container */
 .control-item {
-    /* background-color: #892be244; */
-
     margin: 25px;
-
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 15px;
 }
 
+/* Navigation arrow button styling */
 .btn-arrow {
     width: 50px;
     height: 50px;
@@ -130,38 +155,108 @@ main {
 .btn-arrow button {
     width: 50px;
     height: 50px;
-    border: none;
-
-    background-image: url("../static/arrow.png");
+    border: 2px solid #000000;
+    background-color: #ffffff;
+    background-size: 60%;
     background-repeat: no-repeat;
     background-position: center;
-    object-fit: contain;
-
     cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
 }
 
+.btn-arrow button:hover {
+    background-color: #f0f0f0;
+}
+
+/* Next button is rotated 180 degrees */
 .btn-next {
     transform: rotate(180deg);
 }
 
+/* Info display for current week/date range */
 .sheet-info {
     width: 200px;
     height: 50px;
     border: 1px solid #000000;
-
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
-
     font-size: 1.1rem;
+    background-color: #ffffff;
+    padding: 10px;
 }
 
+/* PDF download button styling */
 .btn-download button {
     width: 200px;
     height: 40px;
-
     font-size: 1.2rem;
-
     cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-download button:hover {
+    background-color: #45a049;
+}
+
+/* Modal/dialog for editing schedule entries */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 300px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: black;
+}
+
+/* Schedule entry cell with background highlight */
+.scheduled {
+    background-color: #c8e6c9;
+    font-weight: 500;
+}
+
+/* JSON export button */
+.btn-export {
+    padding: 10px 20px;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 1rem;
+}
+
+.btn-export:hover {
+    background-color: #0b7dda;
 }
