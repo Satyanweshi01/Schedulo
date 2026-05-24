@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    background: #ffffff; 
+    background: #ffffff; /* Clean white background */
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -9,59 +9,68 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
+/* Removed the box formatting completely */
 .container {
     text-align: center;
-    padding: 50px 70px;
-    background: #ffffff;
-    border-radius: 24px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); 
+    padding: 20px;
+}
+
+/* Fixed width container prevents layout jumping when fonts change sizes */
+.title-wrapper {
+    width: 380px; 
+    margin: 0 auto;
+    text-align: left; /* Anchors the typing animation to the left */
 }
 
 .typedtext {
     font-size: 4.5rem;
     letter-spacing: 3px; 
-    font-family: 'Poppins', sans-serif;
-    
-    /* Removed the border-right (cursor) and the padding */
+    color: #4a148c; /* Font color stays static */
     white-space: nowrap;
     overflow: hidden;
-    margin: 0 auto;
+    margin: 0; 
     
-    /* Changed from steps(8) to 'ease-in-out' for perfectly smooth sliding */
+    /* 
+      1. typing: Slowed down to 6 seconds for a human feel
+      2. style-shift: Cycles through 3 fonts over 18 seconds (6s * 3)
+    */
     animation: 
-        typing 4s ease-in-out infinite,
-        color-shift 12s infinite; 
+        typing 6s ease-in-out infinite,
+        style-shift 18s infinite; 
 }
 
-/* Smooth Typing & Erasing Loop */
+/* Animates to 100% of the wrapper (380px), smoothly revealing the text */
 @keyframes typing {
-    0%, 10% { width: 0; }            /* Starts completely empty */
-    40%, 60% { width: 7.8em; }       /* Smoothly reveals the text and holds it */
-    90%, 100% { width: 0; }          /* Smoothly erases it completely (no 'S' left behind!) */
+    0%, 10% { width: 0; }            
+    40%, 60% { width: 100%; }       
+    90%, 100% { width: 0; }          
 }
 
-/* Changes colors on every new cycle */
-@keyframes color-shift {
+/* Cycles through different font styles and families */
+@keyframes style-shift {
     0%, 33.3% { 
-        color: #4a148c; /* Purple */
+        font-family: 'Poppins', sans-serif;
+        font-style: normal;
     }
     33.4%, 66.6% { 
-        color: #d81b60; /* Pink */
+        font-family: 'Courier New', Courier, monospace;
+        font-style: normal;
     }
     66.7%, 100% { 
-        color: #00897b; /* Teal */
+        font-family: 'Georgia', serif;
+        font-style: italic;
     }
 }
 
 /* --- STATIC TAGLINE --- */
-
 .tagline-wrapper {
-    margin: 15px auto 0;
+    margin: 10px auto 0;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
+/* No animations on the tagline */
 .tagline {
     font-family: 'Caveat', cursive;
     font-size: 2.2rem;
