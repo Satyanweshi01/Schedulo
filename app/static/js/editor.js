@@ -60,7 +60,8 @@ function initializeEditor() {
         { id: 2, name: 'Prof. Johnson' },
         { id: 3, name: 'Ms. Williams' },
         { id: 4, name: 'Mr. Brown' },
-        { id: 5, name: 'Dr. Davis' }
+        { id: 5, name: 'Dr. Davis' },
+        { id:6, name: 'MD SIR'},
     ];
 
     // Initialize empty schedule structure
