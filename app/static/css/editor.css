@@ -10,17 +10,18 @@ body {
     background-color: #ffffff;
 }
 
-/* Main layout using CSS Grid - divides page into table, faculty panel, and controls */
+/* Main layout using CSS Grid - divides page into table, faculty panel, week section, and controls */
 main {
     height: 100vh;
     width: 100%;
     display: grid;
     grid-template-columns: 4fr 1fr;
-    grid-template-rows: 8fr 1fr;
+    grid-template-rows: 1fr auto auto;
 }
 
 /* Table area containing the schedule grid (days, times, subjects) */
 .table-area {
+    grid-row: 1;
     padding: 15px;
     display: grid;
     grid-template-columns: repeat(11, 1fr);
@@ -73,6 +74,7 @@ main {
 
 /* Right panel displaying faculty/teacher list */
 .faculty-area {
+    grid-row: 1;
     width: 100%;
     height: 100%;
     overflow-y: auto;
@@ -134,7 +136,8 @@ main {
 
 /* Bottom control panel for navigation and PDF export */
 .control-area {
-    grid-column: 1/3;
+    grid-column: 1 / 3;
+    grid-row: 3;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     border-top: 2px solid #9C27B0;
@@ -176,6 +179,24 @@ main {
 /* Info display for current week/date range - currently not in use */
 .sheet-info {
     display: none;
+}
+
+/* Week section - displayed below the schedule table */
+.week-section {
+    grid-column: 1 / 3;
+    padding: 15px;
+    color: #4a148c;
+    font-size: 1rem;
+    background-color: #f3e5f5;
+    border: 2px solid #9C27B0;
+    border-top: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.week-section h2 {
+    margin: 0;
 }
 
 /* PDF download button styling */
