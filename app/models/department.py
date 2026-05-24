@@ -1,6 +1,9 @@
 from app.extensions import db
-class Department():
-    def __init__(self,id,name,year):
-        self.id = id
-        self.name = name
-        self.year = year
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String, Integer
+
+# eg. CSE, CSE AI&ML, IT, ECE
+class Department(db.Model):
+    __tablename__ = "departments"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name : Mapped[int] = mapped_column(String(10), nullable=False, unique=True)

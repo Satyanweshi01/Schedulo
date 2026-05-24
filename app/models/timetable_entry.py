@@ -1,10 +1,14 @@
 from app.extensions import db
-class TimeTableEntry():
-    def __init__(self, id, teacher,batch,subject,timeslot):
-        self.id = id
-        self.teacher = teacher
-        self.batch = batch
-        self.subject = subject
-        self.timeslot = timeslot
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String, Integer
+
+class TimeTableEntry(db.Model):
+    __tablename__="timetableentries"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+
+
+        # teacher
+        # subject
+        # timeslot
 
 

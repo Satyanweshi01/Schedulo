@@ -1,7 +1,7 @@
 from app.extensions import db
 from sqlalchemy.orm import Mapped,mapped_column
 from sqlalchemy import String, Integer
-
+# e.g DSA, Programming for problem solving
 class Subject(db.Model):
     __tablename__="subjects"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
