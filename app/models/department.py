@@ -6,4 +6,4 @@ from sqlalchemy import String, Integer
 class Department(db.Model):
     __tablename__ = "departments"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    name : Mapped[int] = mapped_column(String(10), nullable=False, unique=True)
+    name : Mapped[int] = mapped_column(String(50), nullable=False, unique=True)
