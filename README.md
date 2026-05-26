@@ -25,58 +25,77 @@ Python version we are using - `3.12.0`
 
 ### Tasks to complete
 - [x] Restructure the entire project and split the responsibilities for modularity
-- [ ] SQLite Database creation 
+- [x] SQLite Database creation 
     - Create extensions.py in app directory
     - Establish db object
-- [ ] Centralized configuration file creation for easier key access
+- [x] Centralized configuration file creation for easier key access
     - Create a config.py in app directory
-- [ ] Create a stable schemas and data models 
+- [x] Create a stable schemas and data models 
     - Plan the data schemas on paper for clarity
     - Create various sqlalchemy schema objects
     - Test CRUD operation by using it
-- [ ] Establish migration - for interecting with the database schema
+- [x] Establish migration - for interecting with the database schema
+- [ ] CRUD Implemention for each foundation data table
+- [ ] Create a dynamic form webpage to interect with all the databse table
 
 
-### Objects-
-- Timetable
-    - id
-    - entries as list
+### Schema-
 
-- TimetableEntry -> each timetable cell should be a object itself
-    - id
-    - teacher
-    - batch
-    - subject
-    - time_slot
+#### batch
+- batch_id
+- name -> eg. 1 year, 2 year
 
-- Teacher
-    - id
-    - name
-    - department
-    - subject
+#### department
+- dept_id
+- name -> eg. CSE, CSE AI&ML, IT, ECE
 
-- Batch
-    - id
-    - name
-    - year
+#### subject
+- subject_id
+- name
+- code
 
-- Department
-    - id 
-    - name
-    - year
+#### teacher
+- teacher_id
+- name
 
-- Subject
-    - id
-    - name
-    - code
+#### teacherassignments
+- assignment_id
+- FK teacher_id
+- FK dept_id
+- FK subject_id
+- FK batch_id
 
-- Timeslot
-    - day
-    - start_time
-    - end_time
+#### timeslot
+- timeslot_id
+- day
+- start_time
+- end_time
+- slot_order (this is for easier rendering)
+
+#### timetable_entry
+- tt_entry_id
+- FK ta_id (this is id of teacherassignment)
+- FK timeslot_id
+- FK timetable_id
+
+#### timetable
+- timetable_id
+- name
+- FK dept_id
+- FK batch_id
 
 ### Data model process -
-Teacher, Batch, Department, Subject, TimeSlot -> TimetableEntry -> Timetable
+Teacher, Batch, Department, Subject -> TeacherAssignment ,TeacherAssignment, TimeSlot -> TimetableEntry -> Timetable
+
+### Interecting with migration
+
+DO NOT PLAY WITH THIS IF YOU DO NOT KNOW WHAT YOU ARE DOING
+
+flask db migrate -m "message" -> to add new database schema
+
+flask db upgrade -> update the schema
+
+flask db downgrade -> to rollback migration
 
 ### File Structure
 - app -> main app 
@@ -97,6 +116,8 @@ Teacher, Batch, Department, Subject, TimeSlot -> TimetableEntry -> Timetable
     - `__init__`.py -> the main flask application file to combine all the blueprints and return the flask app object.
     - config.py -> contains a Config class which store all the configuration needed for the flask app.
     - extensions.py -> contains all the extra needed object e.g. - database initialisation, migration initialisation etc.
+- instance -> this is where database lives
+- migrations -> this is where middle guy lives
 - .gitignore -> to avoid uploading unnecessary folders
 - LICENCE -> for licencing
 - README.md -> for documentation purpose

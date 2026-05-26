@@ -7,25 +7,33 @@ from sqlalchemy import String, Integer, ForeignKey
 
 class TeacherAssignment(db.Model):
     __tablename__ = "teacher_assignments"
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    assignment_id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True
+        )
     
-    # foreign keys -
-    teacher_id: Mapped[int] = mapped_column(Integer,
-        ForeignKey("teachers.id"),
+    # foreign keys
+        # teacher
+    teacher_id: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("teachers.teacher_id"),
         nullable=False
     )
         # department
-    dept_id: Mapped[int] = mapped_column(Integer,
-        ForeignKey("departments.id"),
+    dept_id: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("departments.dept_id"),
         nullable=False
     )
         # subject
-    subject_id: Mapped[int] = mapped_column(Integer,
-        ForeignKey("subjects.id"),
+    subject_id: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("subjects.subject_id"),
         nullable=False
     )
         # batch 
-    batch_id: Mapped[int] = mapped_column(Integer,
-        ForeignKey("batches.id"),
+    batch_id: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("batches.batch_id"),
         nullable=False
     )

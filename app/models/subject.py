@@ -4,6 +4,15 @@ from sqlalchemy import String, Integer
 # e.g DSA, Programming for problem solving
 class Subject(db.Model):
     __tablename__="subjects"
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    name: Mapped[str] = mapped_column(String(10), nullable=False, unique=True)
-    code: Mapped[str] = mapped_column(String(10), nullable=False, unique=True)
+    subject_id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True
+        )
+    name: Mapped[str] = mapped_column(
+        String(50),
+        nullable=False
+        ) #Subject name
+    code: Mapped[str] = mapped_column(
+        String(50),
+        nullable=False,
+        unique=True) #Subject code
