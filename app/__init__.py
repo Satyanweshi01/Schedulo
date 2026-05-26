@@ -1,11 +1,10 @@
 from flask import Flask
-from app.blueprints.editor import editor_bp # importing the editor blueprint object
-from app.blueprints.landing_page import landing_page_bp
 from app.config import Config # configuration
 from app.extensions import db, migrate # database and migration
 from app import models # importing datamodels because SQLAlchemy only detects imported models 
-
-
+# blueprints
+from app.blueprints.editor import editor_bp # importing the editor blueprint object
+from app.blueprints.landing_page import landing_page_bp
 
 def create_app():
     app = Flask(__name__)
