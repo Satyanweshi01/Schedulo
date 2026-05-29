@@ -73,13 +73,28 @@ main {
     font-size: 1.1rem;
 }
 
+#save_button,
+#delete_button {
+    transition: all 0.3s ease-in-out 0.1s;
+}
+
 #save_button {
     background-color: #40d513;
+}
+
+#save_button:hover {
+    background-color: #33ab0e;
+    box-shadow: 0px 0px 3px 3px #33ab0e77;
 }
 
 #delete_button {
     background-color: #c01414;
     color: #ffffff;
+}
+
+#delete_button:hover {
+    background-color: #8e0e0e;
+    box-shadow: 0px 0px 3px 3px #8e0e0e80;
 }
 
 .curr-data-area {
@@ -171,7 +186,7 @@ main {
 }
 
 .card-edit button:hover {
-    box-shadow: 0px 0px 5px 3px #2fa0cc;
+    box-shadow: 0px 0px 5px 3px #2681a5;
 }
 
 .card-delete button:hover {
