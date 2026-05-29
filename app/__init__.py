@@ -5,11 +5,16 @@ from app import models # importing datamodels because SQLAlchemy only detects im
 # blueprints
 from app.blueprints.editor import editor_bp # importing the editor blueprint object
 from app.blueprints.landing_page import landing_page_bp
+from app.blueprints.landing_after import landing_after_bp
+from app.blueprints.database_edit_form import database_edit_form_bp
+
 
 def create_app():
     app = Flask(__name__)
     app.register_blueprint(editor_bp, url_prefix = "/editor") # registering the editor blue print object
     app.register_blueprint(landing_page_bp)
+    app.register_blueprint(landing_after_bp, url_prefix ="/home")
+    app.register_blueprint(database_edit_form_bp, url_prefix="/database")
 
     app.config.from_object(Config) # passing the Config class as configuration to the flask app object
 
