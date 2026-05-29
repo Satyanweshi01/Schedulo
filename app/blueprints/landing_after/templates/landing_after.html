@@ -15,24 +15,29 @@
                 </div>
                 <div class="manage-db-main">
                     <div class="btn">
-                        <form action="" method="">
-                            <button type="submit">Add Branch</button>
-                        </form>
+                        <a href="{{url_for('database_edit_form.get_subject')}}">
+                            <button type="submit">Add Subject</button>
+                        </a>
                     </div>
                     <div class="btn">
-                        <form action="" method="">
+                        <a href="{{url_for('database_edit_form.get_batch')}}">
+                            <button type="submit">Add Batch</button>
+                        </a>
+                    </div>
+                    <div class="btn">
+                        <a href="{{url_for('database_edit_form.get_department')}}">
                             <button type="submit">Add Department</button>
-                        </form>
+                        </a>
                     </div>
                     <div class="btn">
-                        <form action="" method="">
+                        <a href="{{url_for('database_edit_form.get_teacher')}}">
                             <button type="submit">Add Teacher</button>
-                        </form>
+                        </a>
                     </div>
-                                        <div class="btn">
-                        <form action="" method="">
+                    <div class="btn">
+                        <a href="{{url_for('database_edit_form.get_assignment')}}">
                             <button type="submit">Assign Teacher</button>
-                        </form>
+                        </a>
                     </div>
                 </div>
             </div>

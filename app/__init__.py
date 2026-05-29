@@ -14,7 +14,7 @@ def create_app():
     app.register_blueprint(editor_bp, url_prefix = "/editor") # registering the editor blue print object
     app.register_blueprint(landing_page_bp)
     app.register_blueprint(landing_after_bp, url_prefix ="/home")
-    app.register_blueprint(database_edit_form_bp, url_prefix="/database")
+    app.register_blueprint(database_edit_form_bp)
 
     app.config.from_object(Config) # passing the Config class as configuration to the flask app object
 
