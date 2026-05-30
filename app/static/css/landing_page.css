@@ -1,7 +1,9 @@
 body {
     margin: 0;
     padding: 0;
-    background: #ffffff; /* Clean white background */
+    background:
+        radial-gradient(circle at top left, rgba(124, 58, 237, 0.18), transparent 30rem),
+        linear-gradient(135deg, #ffffff 0%, #f5f3ff 100%);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -76,4 +78,53 @@ body {
     font-size: 2.2rem;
     color: #555555; 
     margin: 0;
+}
+
+.home-link {
+    display: inline-block;
+    margin-top: 34px;
+    text-decoration: none;
+}
+
+.home-button {
+    min-width: 230px;
+    min-height: 54px;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    color: #ffffff;
+    background: linear-gradient(135deg, #7c3aed, #5b21b6);
+    box-shadow: 0 18px 34px rgba(91, 33, 182, 0.28);
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+}
+
+.home-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 24px 42px rgba(91, 33, 182, 0.36);
+    filter: saturate(1.08);
+}
+
+.home-button:active {
+    transform: translateY(-1px);
+}
+
+@media (max-width: 520px) {
+    .title-wrapper {
+        width: 300px;
+    }
+
+    .typedtext {
+        font-size: 3.45rem;
+    }
+
+    .tagline {
+        font-size: 1.85rem;
+    }
+
+    .home-button {
+        min-width: 210px;
+    }
 }
