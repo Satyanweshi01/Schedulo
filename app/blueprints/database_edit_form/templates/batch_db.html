@@ -6,33 +6,56 @@
         <title>Database Edit Form</title>
         <link
             rel="stylesheet"
-            href="../../../static/css/database_edit_form.css"
+            href="{{ url_for('static', filename='css/batch.css') }}"
         />
     </head>
     <body>
-        <header>
-            <h2>Manage Batch</h2>
+        <header class="page-header">
+            <div>
+                <span class="eyebrow">Schedulo database</span>
+                <h2>Manage Batches</h2>
+            </div>
         </header>
-        <main>
+        <main class="batch-page">
             <!--here the form renders-->
-            <form method="POST" action="{{ url_for('database_edit_form.get_batch') }}">
-            {{ form.csrf_token }}
-            {{ form.name.label }} 
-            {{ form.name(size=30) }}
-            <input type="submit" value="Submit">
+            <form class="batch-form" method="POST" action="{{ url_for('database_edit_form.get_batch') }}">
+                <div class="panel-heading">
+                    <span class="panel-icon">+</span>
+                    <div>
+                        <h3>Add Batch</h3>
+                        <p>Create a batch name for timetable planning.</p>
+                    </div>
+                </div>
+                {{ form.csrf_token }}
+                <div class="field-group">
+                    {{ form.name.label }}
+                    {{ form.name(size=30, placeholder="e.g. 2026 CSE A") }}
+                </div>
+                <input type="submit" value="Save Batch">
             </form>
             <div class="curr-data-area">
                 <div class="curr-data-heading">
-                    <h3>Current Database</h5>
+                    <div>
+                        <span class="eyebrow">Live records</span>
+                        <h3>Current Database</h3>
+                    </div>
                 </div>
                 <div class="curr-data-main">
                     {% for i in data %}
                     <div class="card">
                         <div class="card-content">
-                            <div class="content-part">{{ i.name }}</div>
+                            <div class="content-part">
+                                <span>Batch</span>
+                                <strong>{{ i.name }}</strong>
+                            </div>
                         </div>
                         <div class="card-edit" title="Edit"><button></button></div>
                         <div class="card-delete" title="Delete"><button></button></div>
+                    </div>
+                    {% else %}
+                    <div class="empty-state">
+                        <h3>No batches yet</h3>
+                        <p>Add your first batch to start organizing timetable data.</p>
                     </div>
                     {% endfor %}
                 </div>
