@@ -125,6 +125,9 @@
         </main>
 
         <!-- Load the editor JavaScript after DOM is loaded -->
+        <script>
+            window.editorTeachers = {{ teachers | tojson }};
+        </script>
         <script src="{{ url_for('static', filename='js/editor.js') }}"></script>
     </body>
 </html>

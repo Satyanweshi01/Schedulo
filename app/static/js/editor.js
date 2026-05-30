@@ -53,16 +53,8 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeEditor() {
     console.log('Initializing Schedulo editor...');
 
-    // TODO: Fetch teachers and subjects from backend API
-    // For now using mock data - replace with actual API call
-    scheduleState.teachers = [
-        { id: 1, name: 'Dr. Smith' },
-        { id: 2, name: 'Prof. Johnson' },
-        { id: 3, name: 'Ms. Williams' },
-        { id: 4, name: 'Mr. Brown' },
-        { id: 5, name: 'Dr. Davis' },
-        { id:6, name: 'MD SIR'},
-    ];
+    // Teachers are rendered by Flask from the database when the editor page loads.
+    scheduleState.teachers = window.editorTeachers || [];
 
     // Initialize empty schedule structure
     scheduleState.days.forEach(day => {
