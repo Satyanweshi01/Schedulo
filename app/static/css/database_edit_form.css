@@ -47,9 +47,13 @@ main {
     justify-content: center;
 }
 
-/* .form-main {
-    border: 1px solid #0abe85;
-} */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 25px;
+}
 
 .form-group {
     margin-top: 20px;
