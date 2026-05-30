@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.validators import DataRequired 
+from ...extensions import db
 
 # batch form
 class BATCH(FlaskForm):
@@ -19,4 +20,10 @@ class SUBJECT(FlaskForm):
 class TEACHER(FlaskForm):
     name = StringField(label="Teacher Name", validators= [DataRequired()])
 
-# assignment form
+# teacher assignment form
+
+# function for getting hold on the data
+def all_data(model, order_column):
+    return db.session.execute(
+        db.select(model).order_by(order_column)
+    ).scalars().all()

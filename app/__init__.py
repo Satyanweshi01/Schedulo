@@ -17,6 +17,7 @@ def create_app():
     app.register_blueprint(database_edit_form_bp)
 
     app.config.from_object(Config) # passing the Config class as configuration to the flask app object
+    app.secret_key = "sejfaofidsfsdfdfosdif" # csrf token for the form
 
     db.init_app(app) # connection establish between the database and the flask app
     migrate.init_app(app, db) # migration establish between the database and the flask app
