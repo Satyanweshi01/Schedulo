@@ -30,8 +30,10 @@
                 <div class="curr-data-main">
                     {% for i in data %}
                     <div class="card">
-                        <div class="card-content">{{ i.name }}</div>
-                        <div class="card-content">{{ i.code }}</div>
+                        <div class="card-content">
+                            <div class="content-part">{{ i.name }}</div>
+                            <div class="content-part">{{ i.code }}</div>
+                        </div>
                         <div class="card-edit" title="Edit"><button></button></div>
                         <div class="card-delete" title="Delete"><button></button></div>
                     </div>
