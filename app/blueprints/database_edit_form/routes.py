@@ -10,22 +10,20 @@ from ...models import * # data models
 def get_batch():
     batch_form = BATCH()
     # for adding batch
-    if request.method == "POST":
+    if batch_form.validate_on_submit():
             new_batch = Batch(name = batch_form.name.data)# batch here is database object not the form object
             db.session.add(new_batch)
             db.session.commit()
             return redirect(url_for('.get_batch'))
-
-
+    
     return render_template("batch_db.html",form = batch_form,data=all_data(Batch,Batch.batch_id))
 
 # this route for teacher
 @database_edit_form_bp.route("/teacher/add", methods=["GET","POST"])
 def get_teacher():
-
     teacher_form = TEACHER()
-    # for adding batch
-    if request.method == "POST":
+    # for adding teacher
+    if teacher_form.validate_on_submit():
             new_teacher = Teacher(name = teacher_form.name.data)
             db.session.add(new_teacher)
             db.session.commit()
@@ -38,8 +36,8 @@ def get_teacher():
 @database_edit_form_bp.route("/department/add",methods=["GET","POST"])
 def get_department():
     department_form = DEPARTMENT()
-    # for adding batch
-    if request.method == "POST":
+    # for adding department
+    if department_form.validate_on_submit():
             new_department = Department(name = department_form.name.data)
             db.session.add(new_department)
             db.session.commit()
@@ -51,8 +49,8 @@ def get_department():
 @database_edit_form_bp.route("/subject/add", methods=["GET","POST"])
 def get_subject():
     subject_form = SUBJECT()
-    # for adding batch
-    if request.method == "POST":
+    # for adding subject
+    if subject_form.validate_on_submit():
             new_subject = Subject(
                 name = subject_form.name.data,
                 code = subject_form.code.data
@@ -67,3 +65,37 @@ def get_subject():
 @database_edit_form_bp.route("/assignment/add")
 def get_assignment():
     return render_template("teacher_assignment_db.html")
+
+# delete route for batch
+@database_edit_form_bp.route("/batch/delete/<int:id>", methods=["POST"])
+def delete_batch(id):
+    batch_to_delete = db.session.execute(db.select(Batch).where(Batch.batch_id==id)).scalar()
+    print(id)
+    print(batch_to_delete)
+    db.session.delete(batch_to_delete)
+    db.session.commit()
+    return redirect(url_for('.get_batch'))
+
+# delete route for teacher
+@database_edit_form_bp.route("/teacher/delete/<int:id>", methods=["POST"])
+def delete_teacher(id):
+    teacher_to_delete = db.session.execute(db.select(Teacher).where(Teacher.teacher_id==id)).scalar()
+    db.session.delete(teacher_to_delete)
+    db.session.commit()
+    return redirect(url_for('.get_teacher'))
+
+# delete route for department
+@database_edit_form_bp.route("/department/delete/<int:id>", methods=["POST"])
+def delete_department(id):
+    department_to_delete = db.session.execute(db.select(Department).where(Department.dept_id==id)).scalar()
+    db.session.delete(department_to_delete)
+    db.session.commit()
+    return redirect(url_for('.get_department'))
+
+# delete route for subject
+@database_edit_form_bp.route("/subject/delete/<int:id>", methods=["POST"])
+def delete_subject(id):
+    subject_to_delete = db.session.execute(db.select(Subject).where(Subject.subject_id==id)).scalar()
+    db.session.delete(subject_to_delete)
+    db.session.commit()
+    return redirect(url_for('.get_subject'))

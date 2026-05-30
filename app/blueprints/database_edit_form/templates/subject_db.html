@@ -58,7 +58,11 @@
                             </div>
                         </div>
                         <div class="card-edit" title="Edit"><button></button></div>
-                        <div class="card-delete" title="Delete"><button></button></div>
+                        <div class="card-delete" title="Delete">
+                            <form action="{{url_for('database_edit_form.delete_subject',id=i.subject_id)}}" method="POST">
+                                <button type = "submit"></button>
+                            </form>
+                        </div>
                     </div>
                     {% else %}
                     <div class="empty-state">
