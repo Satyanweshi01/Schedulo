@@ -4,13 +4,18 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Landing After Page</title>
-        <link rel="stylesheet" href="../../../static/css/landing_after.css" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/landing_after.css') }}" />
     </head>
     <body>
-        <header style="border-bottom: 1px solid black">Welcome Sir</header>
+        <header class="dashboard-header">
+            <div>
+                <span class="eyebrow">Schedulo workspace</span>
+                <h1>Welcome Sir</h1>
+            </div>
+        </header>
         <main>
             <div class="manage-db-grid-area">
-                <div class="label" style="border-bottom: 1px solid black">
+                <div class="label">
                     Manage Database
                 </div>
                 <div class="manage-db-main">
@@ -42,7 +47,7 @@
                 </div>
             </div>
             <div class="history-grid-area">
-                <div class="label" style="border-left: 1px solid black">
+                <div class="label">
                     History
                 </div>
                 <div class="history-main">
