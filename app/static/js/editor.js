@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     await initializeEditor();
     setupEventListeners();
     renderTeacherCards();
+    setupAutoFitHandlers();
 });
 
 async function loadTeacherData() {
@@ -214,7 +215,11 @@ function renderAssignedCell(cell, entry) {
     teacher.className = "cell-teacher";
     teacher.textContent = entry.teacher;
 
-    cell.replaceChildren(removeButton, subject, teacher);
+    const content = document.createElement("div");
+    content.className = "cell-content";
+    content.append(subject, teacher);
+
+    cell.replaceChildren(removeButton, content);
 }
 
 function removeTeacherFromCell(cell) {
@@ -238,6 +243,23 @@ function removeTeacherFromCell(cell) {
 }
 
 function updateMergedTeacherBorders(day) {
+    let runStart = null;
+    let runTeacherId = null;
+    let runLength = 0;
+
+    function finishRun() {
+        if (runStart === null) return;
+
+        const firstCell = getScheduleCell(day, scheduleState.timeSlots[runStart]);
+        if (firstCell) {
+            firstCell.style.setProperty("--merge-span", runLength);
+        }
+
+        runStart = null;
+        runTeacherId = null;
+        runLength = 0;
+    }
+
     scheduleState.timeSlots.forEach((slot, index) => {
         const cell = getScheduleCell(day, slot);
         if (!cell) return;
@@ -249,6 +271,7 @@ function updateMergedTeacherBorders(day) {
         const nextEntry = nextSlot ? scheduleState.schedule[day][nextSlot] : null;
         const teacherId = entry.teacherId;
 
+        cell.style.setProperty("--merge-span", 1);
         cell.classList.toggle(
             "merge-left",
             Boolean(teacherId && previousEntry && previousEntry.teacherId === teacherId)
@@ -257,13 +280,78 @@ function updateMergedTeacherBorders(day) {
             "merge-right",
             Boolean(teacherId && nextEntry && nextEntry.teacherId === teacherId)
         );
+
+        if (!teacherId) {
+            finishRun();
+            return;
+        }
+
+        if (teacherId !== runTeacherId) {
+            finishRun();
+            runStart = index;
+            runTeacherId = teacherId;
+            runLength = 1;
+            return;
+        }
+
+        runLength += 1;
     });
+
+    finishRun();
+    fitMergedCellLabels(day);
 }
 
 function getScheduleCell(day, timeSlot) {
     return Array.from(document.querySelectorAll(".schedule-cell")).find(
         (cell) => cell.dataset.day === day && cell.dataset.timeSlot === timeSlot
     );
+}
+
+function fitMergedCellLabels(day) {
+    scheduleState.timeSlots.forEach((slot) => {
+        const cell = getScheduleCell(day, slot);
+        if (!cell || cell.classList.contains("merge-left")) return;
+
+        const content = cell.querySelector(".cell-content");
+        if (!content) return;
+
+        fitCellContent(content);
+    });
+}
+
+function fitCellContent(content) {
+    const subject = content.querySelector(".cell-subject");
+    const teacher = content.querySelector(".cell-teacher");
+    if (!subject || !teacher) return;
+
+    subject.style.fontSize = "";
+    teacher.style.fontSize = "";
+
+    let subjectSize = parseFloat(getComputedStyle(subject).fontSize);
+    let teacherSize = parseFloat(getComputedStyle(teacher).fontSize);
+    const minSubjectSize = 10;
+    const minTeacherSize = 9;
+
+    while (
+        (content.scrollWidth > content.clientWidth || content.scrollHeight > content.clientHeight) &&
+        (subjectSize > minSubjectSize || teacherSize > minTeacherSize)
+    ) {
+        subjectSize = Math.max(minSubjectSize, subjectSize - 1);
+        teacherSize = Math.max(minTeacherSize, teacherSize - 1);
+        subject.style.fontSize = `${subjectSize}px`;
+        teacher.style.fontSize = `${teacherSize}px`;
+    }
+}
+
+function setupAutoFitHandlers() {
+    let resizeTimer = null;
+
+    window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            scheduleState.days.forEach((day) => fitMergedCellLabels(day));
+        }, 100);
+    });
 }
 
 /**
@@ -339,9 +427,15 @@ function generateScheduleJSON() {
         metadata: {
             creationDate: new Date().toISOString(),
             institution: "Your Institution Name",
+            collegeName: editorContext.college_name,
+            departmentName: editorContext.department_name,
+            batchName: editorContext.batch_name,
+            week: editorContext.week,
         },
         schedule: scheduleState.schedule,
         teachers: scheduleState.teachers,
+        days: scheduleState.days,
+        timeSlots: scheduleState.timeSlots,
     };
 
     return scheduleJSON;
@@ -367,8 +461,35 @@ function exportToPDF() {
     console.log("PDF export initiated");
     console.log("Current schedule:", scheduleState.schedule);
 
-    // TODO: Implement PDF export via backend API
-    alert("PDF export feature will be available soon.");
+    const scheduleJSON = generateScheduleJSON();
+
+    fetch("/editor/export_pdf", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(scheduleJSON),
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("PDF export failed");
+            }
+            return response.blob();
+        })
+        .then((blob) => {
+            const downloadUrl = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = downloadUrl;
+            link.download = "schedulo-timetable.pdf";
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(downloadUrl);
+        })
+        .catch((error) => {
+            console.error(error);
+            alert("PDF export failed. Please try again.");
+        });
 }
 
 /**
