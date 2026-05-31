@@ -7,6 +7,26 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/editor.css') }}" />
     </head>
     <body>
+        <header class="editor-header">
+            <div>
+                <span class="eyebrow">Schedulo editor</span>
+                <h1>Timetable Builder</h1>
+            </div>
+            <div class="context-panel" aria-label="Selected timetable context">
+                <div>
+                    <span>Department</span>
+                    <strong>{{ editor_context.department_name or "Not selected" }}</strong>
+                </div>
+                <div>
+                    <span>Batch</span>
+                    <strong>{{ editor_context.batch_name or "Not selected" }}</strong>
+                </div>
+                <div>
+                    <span>Week</span>
+                    <strong>{{ week }}</strong>
+                </div>
+            </div>
+        </header>
         <main>
             <!-- Schedule Grid Section: displays timetable with days, time slots, and subject entries -->
             <div class="table-area">
@@ -125,6 +145,7 @@
         </main>
         <script>
     const cards = {{ cards_json | tojson }};
+    const editorContext = {{ editor_context | tojson }};
 </script>
         <!-- Load the editor JavaScript after DOM is loaded -->
         <script src="{{ url_for('static', filename='js/editor.js') }}"></script>
