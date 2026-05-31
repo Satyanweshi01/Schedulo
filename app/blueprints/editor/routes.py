@@ -4,7 +4,6 @@ from .services import week
 from ...extensions import db
 from ...models import *
 
-cards_json = []
 
 @editor_bp.route("/")
 def index():
@@ -20,34 +19,35 @@ def index():
         )
     ).scalars().all()
     # eta json banache cards theke
-    # cards_json = [
-    # {
-    #     "assignment_id": card.assignment_id,
-    #     "teacher_id": card.teacher.teacher_id,
-    #     "teacher_name": card.teacher.name,
-    #     "subject_id": card.subject.subject_id,
-    #     "subject_name": card.subject.name,
-    #     "batch_id": card.batch.batch_id,
-    #     "batch_name": card.batch.name
-    # }
-    # for card in cards
-    # ]
 
-    # cards_json = []
+    cards_json = [
+    {
+        "assignment_id": card.assignment_id,
+        "teacher_id": card.teacher.teacher_id,
+        "teacher_name": card.teacher.name,
+        "subject_id": card.subject.subject_id,
+        "subject_name": card.subject.name,
+        "batch_id": card.batch.batch_id,
+        "batch_name": card.batch.name
+    }
+    for card in cards
+    ]
 
-    for card in cards:
-        cards_json.append({
-            "assignment_id": card.assignment_id,
-            "teacher_id": card.teacher.teacher_id,
-            "teacher_name": card.teacher.name,
-            "subject_id": card.subject.subject_id,
-            "subject_name": card.subject.name,
-            "batch_id": card.batch.batch_id,
-            "batch_name": card.batch.name
-        })
+
+
+    # for card in cards:
+    #     cards_json = ({
+    #         "assignment_id": card.assignment_id,
+    #         "teacher_id": card.teacher.teacher_id,
+    #         "teacher_name": card.teacher.name,
+    #         "subject_id": card.subject.subject_id,
+    #         "subject_name": card.subject.name,
+    #         "batch_id": card.batch.batch_id,
+    #         "batch_name": card.batch.name
+    #     })
 
     return render_template("editor.html",week=current_week,cards_json=cards_json)
 
-@editor_bp.route("/api/teacher_data")
-def get_teacher_data():
-    return jsonify(cards_json)
+# @editor_bp.route("/api/teacher_data")
+# def get_teacher_data():
+#     return jsonify(cards_json)
