@@ -190,6 +190,7 @@ function assignSelectedTeacherToCell(cell) {
     };
 
     renderAssignedCell(cell, scheduleState.schedule[day][timeSlot]);
+    updateMergedTeacherBorders(day);
 }
 
 function renderAssignedCell(cell, entry) {
@@ -233,6 +234,36 @@ function removeTeacherFromCell(cell) {
 
     cell.classList.remove("scheduled");
     cell.innerHTML = "";
+    updateMergedTeacherBorders(day);
+}
+
+function updateMergedTeacherBorders(day) {
+    scheduleState.timeSlots.forEach((slot, index) => {
+        const cell = getScheduleCell(day, slot);
+        if (!cell) return;
+
+        const entry = scheduleState.schedule[day][slot];
+        const previousSlot = scheduleState.timeSlots[index - 1];
+        const nextSlot = scheduleState.timeSlots[index + 1];
+        const previousEntry = previousSlot ? scheduleState.schedule[day][previousSlot] : null;
+        const nextEntry = nextSlot ? scheduleState.schedule[day][nextSlot] : null;
+        const teacherId = entry.teacherId;
+
+        cell.classList.toggle(
+            "merge-left",
+            Boolean(teacherId && previousEntry && previousEntry.teacherId === teacherId)
+        );
+        cell.classList.toggle(
+            "merge-right",
+            Boolean(teacherId && nextEntry && nextEntry.teacherId === teacherId)
+        );
+    });
+}
+
+function getScheduleCell(day, timeSlot) {
+    return Array.from(document.querySelectorAll(".schedule-cell")).find(
+        (cell) => cell.dataset.day === day && cell.dataset.timeSlot === timeSlot
+    );
 }
 
 /**

@@ -285,6 +285,14 @@ main {
     color: #4a148c;
 }
 
+.scheduled.merge-left {
+    border-left-color: transparent;
+}
+
+.scheduled.merge-right {
+    border-right-color: transparent;
+}
+
 .cell-subject,
 .cell-teacher {
     display: block;

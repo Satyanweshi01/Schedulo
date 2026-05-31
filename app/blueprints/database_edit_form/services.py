@@ -5,16 +5,7 @@ from ...extensions import db
 
 # batch form
 class BATCH(FlaskForm):
-    name = SelectField(
-        label="Year",
-        choices=[
-            ("First Year", "First Year"),
-            ("Second Year", "Second Year"),
-            ("Third Year", "Third Year"),
-            ("Fourth Year", "Fourth Year"),
-        ],
-        validators=[DataRequired()],
-    )
+    name = StringField(label="Name", validators= [DataRequired()])
 
 # department form
 class DEPARTMENT(FlaskForm):
