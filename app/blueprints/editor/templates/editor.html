@@ -106,7 +106,7 @@
                 <!-- Left Control: OK Button to store JSON in variable -->
                 <div class="control-item">
                     <div class="btn-ok">
-                        <button title="Store schedule JSON for backend submission">OK</button>
+                        <button title="Store schedule JSON for backend submission">Save</button>
                     </div>
                 </div>
 
@@ -125,9 +125,6 @@
         </main>
 
         <!-- Load the editor JavaScript after DOM is loaded -->
-        <script>
-            window.editorTeachers = {{ teachers | tojson }};
-        </script>
         <script src="{{ url_for('static', filename='js/editor.js') }}"></script>
     </body>
 </html>

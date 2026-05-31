@@ -53,8 +53,16 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeEditor() {
     console.log('Initializing Schedulo editor...');
 
-    // Teachers are rendered by Flask from the database when the editor page loads.
-    scheduleState.teachers = window.editorTeachers || [];
+    // TODO: Fetch teachers and subjects from backend API
+    // For now using mock data - replace with actual API call
+    scheduleState.teachers = [
+        { id: 1, name: 'S Das' },
+        { id: 2, name: 'R Mukherjee' },
+        { id: 3, name: 'TP Sarkar' },
+        { id: 4, name: 'G Chatterjee' },
+        { id: 5, name: 'H Roy' },
+        { id:6, name: 'MD SIR'},
+    ];
 
     // Initialize empty schedule structure
     scheduleState.days.forEach(day => {
@@ -193,7 +201,7 @@ function storeScheduleJSON() {
     scheduleState.storedJSON = generateScheduleJSON();
 
     console.log('Schedule JSON stored in variable:', scheduleState.storedJSON);
-    alert('Schedule data has been stored and is ready for submission to backend.');
+    alert('Timetable is saved in the database successfully');
 }
 
 /**

@@ -16,7 +16,7 @@ def get_batch():
             db.session.commit()
             return redirect(url_for('.get_batch'))
     
-    return render_template("batch_db.html",form = batch_form,data=all_data(Batch,Batch.batch_id))
+    return render_template("batch_db.html",form = batch_form,data=reversed(all_data(Batch,Batch.batch_id)))
 
 # this route for teacher
 @database_edit_form_bp.route("/teacher/add", methods=["GET","POST"])
@@ -29,7 +29,7 @@ def get_teacher():
             db.session.commit()
             return redirect(url_for('.get_teacher'))
 
-    return render_template("teacher_db.html",form = teacher_form,data=all_data(Teacher,Teacher.teacher_id))
+    return render_template("teacher_db.html",form = teacher_form,data=reversed(all_data(Teacher,Teacher.teacher_id)))
 
 
 # this route for department
@@ -43,7 +43,7 @@ def get_department():
             db.session.commit()
             return redirect(url_for('.get_department'))
 
-    return render_template("department_db.html",form = department_form,data=all_data(Department,Department.dept_id))
+    return render_template("department_db.html",form = department_form,data=reversed(all_data(Department,Department.dept_id)))
 
 # this route for subject
 @database_edit_form_bp.route("/subject/add", methods=["GET","POST"])
@@ -59,7 +59,7 @@ def get_subject():
             db.session.commit()
             return redirect(url_for('.get_subject'))
 
-    return render_template("subject_db.html",form = subject_form,data=all_data(Subject,Subject.subject_id))
+    return render_template("subject_db.html",form = subject_form,data=reversed(all_data(Subject,Subject.subject_id)))
 
 # this route for assignment 
 @database_edit_form_bp.route("/assignment/add")
