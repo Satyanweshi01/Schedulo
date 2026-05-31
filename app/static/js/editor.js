@@ -19,55 +19,64 @@ const scheduleState = {
 
     // All time slots
     timeSlots: [
-        '10:00-10:50',
-        '10:50-11:40',
-        '11:40-12:30',
-        '12:30-1:20',
-        '1:20-2:00',
-        '2:00-2:50',
-        '2:50-3:40',
-        '3:40-4:30',
-        '4:30-5:20'
+        "10:00-10:50",
+        "10:50-11:40",
+        "11:40-12:30",
+        "12:30-1:20",
+        "1:20-2:00",
+        "2:00-2:50",
+        "2:50-3:40",
+        "3:40-4:30",
+        "4:30-5:20",
     ],
 
     // Days of the week
-    days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+    days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
 
     // Stored JSON data - will hold the schedule JSON when OK is pressed
-    storedJSON: null
+    storedJSON: null,
 };
 
 /**
  * Initialize the editor on page load
  * Sets up event listeners and initializes data
  */
-document.addEventListener('DOMContentLoaded', function() {
-    initializeEditor();
+document.addEventListener("DOMContentLoaded", async function () {
+    await initializeEditor();
     setupEventListeners();
     renderTeacherCards();
 });
 
+async function loadTeacherData() {
+    const response = await fetch("/editor/api/teacher_data");
+    teacherData = await response.json();
+
+    console.log(teacherData);
+
+    return teacherData;
+}
+
 /**
  * Initialize editor state and fetch data from backend
  */
-function initializeEditor() {
-    console.log('Initializing Schedulo editor...');
+async function initializeEditor() {
+    console.log("Initializing Schedulo editor...");
 
     // TODO: Fetch teachers and subjects from backend API
-    
+    // For now using mock data - replace with actual API call
     scheduleState.teachers = cards.map(card => ({
     id: card.teacher_id,
     name: card.teacher_name
 }));
 
     // Initialize empty schedule structure
-    scheduleState.days.forEach(day => {
+    scheduleState.days.forEach((day) => {
         scheduleState.schedule[day] = {};
-        scheduleState.timeSlots.forEach(slot => {
+        scheduleState.timeSlots.forEach((slot) => {
             scheduleState.schedule[day][slot] = {
-                subject: '',
-                teacher: '',
-                stream: ''
+                subject: "",
+                teacher: "",
+                stream: "",
             };
         });
     });
@@ -78,24 +87,24 @@ function initializeEditor() {
  */
 function setupEventListeners() {
     // Teacher card selection
-    document.querySelectorAll('.card').forEach(card => {
-        card.addEventListener('click', function() {
+    document.querySelectorAll(".card").forEach((card) => {
+        card.addEventListener("click", function () {
             selectTeacher(this);
         });
     });
 
     // OK button - stores JSON in variable for backend use
-    const okBtn = document.querySelector('.btn-ok button');
-    if (okBtn) okBtn.addEventListener('click', storeScheduleJSON);
+    const okBtn = document.querySelector(".btn-ok button");
+    if (okBtn) okBtn.addEventListener("click", storeScheduleJSON);
 
     // PDF download button
-    const downloadBtn = document.querySelector('.btn-download button');
-    if (downloadBtn) downloadBtn.addEventListener('click', exportToPDF);
+    const downloadBtn = document.querySelector(".btn-download button");
+    if (downloadBtn) downloadBtn.addEventListener("click", exportToPDF);
 
     // Search functionality
-    const searchInput = document.querySelector('.search');
+    const searchInput = document.querySelector(".search");
     if (searchInput) {
-        searchInput.addEventListener('input', function(e) {
+        searchInput.addEventListener("input", function (e) {
             filterTeachers(e.target.value);
         });
     }
@@ -107,38 +116,38 @@ function setupEventListeners() {
  */
 function selectTeacher(cardElement) {
     // Remove previous selection
-    document.querySelectorAll('.card').forEach(card => {
-        card.classList.remove('selected');
+    document.querySelectorAll(".card").forEach((card) => {
+        card.classList.remove("selected");
     });
 
     // Highlight selected card
-    cardElement.classList.add('selected');
+    cardElement.classList.add("selected");
 
     // Store selected teacher name
     scheduleState.selectedTeacher = cardElement.textContent.trim();
 
-    console.log('Selected teacher:', scheduleState.selectedTeacher);
+    console.log("Selected teacher:", scheduleState.selectedTeacher);
 }
 
 /**
  * Render teacher cards in the faculty panel
  */
 function renderTeacherCards() {
-    const facultyArea = document.querySelector('.faculty-area');
+    const facultyArea = document.querySelector(".faculty-area");
 
     // Keep search box and clear cards
-    const searchBox = facultyArea.querySelector('.search');
-    const cards = facultyArea.querySelectorAll('.card');
-    cards.forEach(card => card.remove());
+    const searchBox = facultyArea.querySelector(".search");
+    const cards = facultyArea.querySelectorAll(".card");
+    cards.forEach((card) => card.remove());
 
     // Add teacher cards
-    scheduleState.teachers.forEach(teacher => {
-        const card = document.createElement('div');
-        card.className = 'card';
+    scheduleState.teachers.forEach((teacher) => {
+        const card = document.createElement("div");
+        card.className = "card";
         card.textContent = teacher.name;
         card.dataset.teacherId = teacher.id;
 
-        card.addEventListener('click', function() {
+        card.addEventListener("click", function () {
             selectTeacher(this);
         });
 
@@ -151,14 +160,14 @@ function renderTeacherCards() {
  * @param {string} searchTerm - Search query
  */
 function filterTeachers(searchTerm) {
-    const cards = document.querySelectorAll('.card');
+    const cards = document.querySelectorAll(".card");
 
-    cards.forEach(card => {
+    cards.forEach((card) => {
         const teacherName = card.textContent.toLowerCase();
         if (teacherName.includes(searchTerm.toLowerCase())) {
-            card.style.display = 'flex';
+            card.style.display = "flex";
         } else {
-            card.style.display = 'none';
+            card.style.display = "none";
         }
     });
 }
@@ -179,10 +188,10 @@ function generateScheduleJSON() {
     const scheduleJSON = {
         metadata: {
             creationDate: new Date().toISOString(),
-            institution: 'Your Institution Name'
+            institution: "Your Institution Name",
         },
         schedule: scheduleState.schedule,
-        teachers: scheduleState.teachers
+        teachers: scheduleState.teachers,
     };
 
     return scheduleJSON;
@@ -196,8 +205,8 @@ function generateScheduleJSON() {
 function storeScheduleJSON() {
     scheduleState.storedJSON = generateScheduleJSON();
 
-    console.log('Schedule JSON stored in variable:', scheduleState.storedJSON);
-    alert('Timetable is saved in the database successfully');
+    console.log("Schedule JSON stored in variable:", scheduleState.storedJSON);
+    alert("Timetable is saved in the database successfully");
 }
 
 /**
@@ -205,11 +214,11 @@ function storeScheduleJSON() {
  * Currently logs the data; actual PDF generation would need backend support
  */
 function exportToPDF() {
-    console.log('PDF export initiated');
-    console.log('Current schedule:', scheduleState.schedule);
+    console.log("PDF export initiated");
+    console.log("Current schedule:", scheduleState.schedule);
 
     // TODO: Implement PDF export via backend API
-    alert('PDF export feature will be available soon.');
+    alert("PDF export feature will be available soon.");
 }
 
 /**
@@ -226,13 +235,13 @@ function getStoredJSON() {
  */
 function submitScheduleToBackend() {
     if (!scheduleState.storedJSON) {
-        alert('Please click OK button first to prepare the schedule data.');
+        alert("Please click OK button first to prepare the schedule data.");
         return;
     }
 
     // TODO: Replace with actual backend API endpoint
-    console.log('Submitting to backend:', scheduleState.storedJSON);
-    alert('Schedule submitted to backend (implementation pending)');
+    console.log("Submitting to backend:", scheduleState.storedJSON);
+    alert("Schedule submitted to backend (implementation pending)");
 }
 
 // Expose functions to window for backend access and debugging
