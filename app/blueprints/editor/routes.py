@@ -33,8 +33,6 @@ def index():
     for card in cards
     ]
 
-
-
     # for card in cards:
     #     cards_json = ({
     #         "assignment_id": card.assignment_id,
