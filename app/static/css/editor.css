@@ -46,6 +46,23 @@ main {
     background-color: #f3e5f5;
 }
 
+.schedule-cell {
+    padding: 8px;
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+}
+
+.stream-cell,
+.locked-cell {
+    cursor: default;
+}
+
+.stream-cell:hover,
+.locked-cell:hover {
+    background-color: inherit;
+}
+
 /* Header cells (time slots) */
 .th {
     width: 100%;
@@ -115,10 +132,21 @@ main {
     cursor: pointer;
     padding: 10px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
     color: #4a148c;
+    text-align: center;
+    gap: 6px;
+}
+
+.card-teacher {
+    font-weight: 700;
+}
+
+.card-subject {
+    font-size: 0.9rem;
 }
 
 /* Visual feedback when hovering over a teacher card */
@@ -255,6 +283,41 @@ main {
     background-color: #e1bee7;
     font-weight: 500;
     color: #4a148c;
+}
+
+.cell-subject,
+.cell-teacher {
+    display: block;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    line-height: 1.2;
+}
+
+.cell-subject {
+    font-weight: 700;
+}
+
+.cell-teacher {
+    font-size: 0.9rem;
+}
+
+.remove-assignment {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 20px;
+    height: 20px;
+    border: none;
+    border-radius: 50%;
+    background-color: #7b1fa2;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 0.75rem;
+    line-height: 20px;
+}
+
+.remove-assignment:hover {
+    background-color: #4a148c;
 }
 
 /* JSON export button */
