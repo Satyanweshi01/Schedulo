@@ -62,9 +62,37 @@ def get_subject():
     return render_template("subject_db.html",form = subject_form,data=reversed(all_data(Subject,Subject.subject_id)))
 
 # this route for assignment 
-@database_edit_form_bp.route("/assignment/add")
+@database_edit_form_bp.route("/assignment/add",methods=["GET","POST"])
 def get_assignment():
-    return render_template("teacher_assignment_db.html")
+    teacher_assignment_form = TEACHERASSIGNMENT()
+    
+    # to populate teacher option
+    all_teachers = all_data(Teacher,Teacher.teacher_id)
+    teacher_assignment_form.teacher.choices = [(teacher.teacher_id,teacher.name)for teacher in all_teachers]
+    # to popolate department option
+    all_department = all_data(Department,Department.dept_id)
+    teacher_assignment_form.department.choices = [(dept.dept_id,dept.name)for dept in all_department]
+    # to popolate batch option
+    all_batch = all_data(Batch,Batch.batch_id)
+    teacher_assignment_form.batch.choices = [(batch.batch_id,batch.name)for batch in all_batch]
+    # to popolate subject option
+    all_subject = all_data(Subject,Subject.subject_id)
+    teacher_assignment_form.subject.choices = [(subject.subject_id,subject.name)for subject in all_subject]
+
+
+    # for adding new teacher assignment
+    if teacher_assignment_form.validate_on_submit():
+            new_assignment = TeacherAssignment(
+                teacher_id = teacher_assignment_form.teacher.data,
+                dept_id = teacher_assignment_form.department.data,
+                batch_id = teacher_assignment_form.batch.data,
+                subject_id = teacher_assignment_form.subject.data                
+                )
+            db.session.add(new_assignment)
+            db.session.commit()
+            return redirect(url_for('.get_assignment'))
+
+    return render_template("teacher_assignment_db.html",form = teacher_assignment_form, data=reversed(all_data(TeacherAssignment,TeacherAssignment.assignment_id)))
 
 # delete route for batch
 @database_edit_form_bp.route("/batch/delete/<int:id>", methods=["POST"])
@@ -99,3 +127,11 @@ def delete_subject(id):
     db.session.delete(subject_to_delete)
     db.session.commit()
     return redirect(url_for('.get_subject'))
+
+# delete route for assignment
+@database_edit_form_bp.route("/assignment/delete/<int:id>", methods=["POST"])
+def delete_assignment(id):
+    assignment_to_delete = db.session.execute(db.select(TeacherAssignment).where(TeacherAssignment.assignment_id == id)).scalar()
+    db.session.delete(assignment_to_delete)
+    db.session.commit()
+    return redirect(url_for('.get_assignment'))

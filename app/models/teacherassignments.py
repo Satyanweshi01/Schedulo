@@ -1,5 +1,5 @@
 from app.extensions import db
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, Integer, ForeignKey
 
 # this is a mapping table where we assign 
@@ -19,21 +19,25 @@ class TeacherAssignment(db.Model):
         ForeignKey("teachers.teacher_id"),
         nullable=False
     )
+    teacher = relationship("Teacher")
         # department
     dept_id: Mapped[int] = mapped_column(
         Integer,
         ForeignKey("departments.dept_id"),
         nullable=False
     )
+    department = relationship("Department")
         # subject
     subject_id: Mapped[int] = mapped_column(
         Integer,
         ForeignKey("subjects.subject_id"),
         nullable=False
     )
+    subject = relationship("Subject")
         # batch 
     batch_id: Mapped[int] = mapped_column(
         Integer,
         ForeignKey("batches.batch_id"),
         nullable=False
     )
+    batch = relationship("Batch")
