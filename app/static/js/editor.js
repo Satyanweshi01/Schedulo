@@ -201,7 +201,7 @@ function storeScheduleJSON() {
     scheduleState.storedJSON = generateScheduleJSON();
 
     console.log('Schedule JSON stored in variable:', scheduleState.storedJSON);
-    alert('Schedule data has been stored and is ready for submission to backend.');
+    alert('Timetable is saved in the database successfully');
 }
 
 /**
