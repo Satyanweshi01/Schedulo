@@ -1,6 +1,8 @@
 from . import editor_bp # from current package importing the editor_bp from __init__
 from flask import render_template, request
 from .services import week
+from ...extensions import db
+from ...models import *
 
 @editor_bp.route("/")
 def index():
