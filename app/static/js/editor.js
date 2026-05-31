@@ -56,11 +56,11 @@ function initializeEditor() {
     // TODO: Fetch teachers and subjects from backend API
     // For now using mock data - replace with actual API call
     scheduleState.teachers = [
-        { id: 1, name: 'Dr. Smith' },
-        { id: 2, name: 'Prof. Johnson' },
-        { id: 3, name: 'Ms. Williams' },
-        { id: 4, name: 'Mr. Brown' },
-        { id: 5, name: 'Dr. Davis' },
+        { id: 1, name: 'S Das' },
+        { id: 2, name: 'R Mukherjee' },
+        { id: 3, name: 'TP Sarkar' },
+        { id: 4, name: 'G Chatterjee' },
+        { id: 5, name: 'H Roy' },
         { id:6, name: 'MD SIR'},
     ];
 
