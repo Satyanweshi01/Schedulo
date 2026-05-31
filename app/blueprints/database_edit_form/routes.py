@@ -1,6 +1,6 @@
 from . import database_edit_form_bp # from current package importing the database_edit_form_bp from __init__
 from flask import render_template, redirect, request, url_for
-from .services import * # for forms 
+from .services import BATCH,TEACHER,DEPARTMENT,SUBJECT,TEACHERASSIGNMENT,all_data # for forms 
 from ...extensions import db # for database
 from ...models import * # data models
 

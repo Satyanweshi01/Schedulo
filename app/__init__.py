@@ -7,6 +7,7 @@ from app.blueprints.editor import editor_bp # importing the editor blueprint obj
 from app.blueprints.landing_page import landing_page_bp
 from app.blueprints.landing_after import landing_after_bp
 from app.blueprints.database_edit_form import database_edit_form_bp
+from app.blueprints.before_editor import before_editor_bp
 
 
 def create_app():
@@ -15,6 +16,7 @@ def create_app():
     app.register_blueprint(landing_page_bp)
     app.register_blueprint(landing_after_bp, url_prefix ="/home")
     app.register_blueprint(database_edit_form_bp)
+    app.register_blueprint(before_editor_bp)
 
     app.config.from_object(Config) # passing the Config class as configuration to the flask app object
     app.secret_key = "sejfaofidsfsdfdfosdif" # csrf token for the form

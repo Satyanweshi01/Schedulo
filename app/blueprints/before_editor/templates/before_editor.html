@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Userform</title>
+</head>
+<body>
+                <form class="batch-form" method="POST" action="{{ url_for('before_editor.get_editor') }}">
+                <div class="panel-heading">
+                    <span class="panel-icon">+</span>
+                    <div>
+                        <h3>Choose Department and Batch</h3>
+                    </div>
+                </div>
+                {{ form.csrf_token }}
+                <div class="field-group">
+                    {{ form.department.label }}
+                    {{ form.department() }}
+                </div>
+                <div class="field-group">
+                    {{ form.batch.label }}
+                    {{ form.batch() }}
+                </div>
+                <input type="submit" value="Save">
+            </form>
+</body>
+</html>
