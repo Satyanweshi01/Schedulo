@@ -3,17 +3,20 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Database Edit Form</title>
+        <title>Manage Assignments</title>
         <link
             rel="stylesheet"
-            href="../../../static/css/database_edit_form.css"
+            href="{{ url_for('static', filename='css/database_edit_form.css') }}"
         />
     </head>
     <body>
-        <header>
-            <h2>Manage Assignments</h2>
+        <header class="page-header">
+            <div>
+                <span class="eyebrow">Schedulo database</span>
+                <h2>Manage Assignments</h2>
+            </div>
         </header>
-        <main>
+        <main class="assignment-page">
             <!--here the form renders-->
             <form class="assignment-form" method="POST" action="{{ url_for('database_edit_form.get_assignment') }}">
                 <div class="panel-heading">
@@ -40,7 +43,7 @@
                     {{ form.subject.label }}
                     {{ form.subject() }}
                 </div>
-                <input type="submit" value="Save">
+                <input type="submit" value="Save Assignment">
             </form>
             <div class="curr-data-area">
                 <div class="curr-data-heading">
