@@ -43,23 +43,6 @@ def index():
     for card in cards
     ]
 
-<<<<<<< HEAD
-=======
-    department = db.session.execute(
-        db.select(Department).where(Department.dept_id == dept_id)
-    ).scalar()
-    batch = db.session.execute(
-        db.select(Batch).where(Batch.batch_id == batch_id)
-    ).scalar()
-
-    editor_context = {
-        "college_name": "BENGAL INSTITUTE OF TECHNOLOGY",
-        "department_name": department.name if department else "",
-        "batch_name": batch.name if batch else "",
-        "week": current_week,
-    }
-
->>>>>>> 401e4b6a711e1b10f32b5b1c4dde96f3df9c5d07
     # for card in cards:
     #     cards_json = ({
     #         "assignment_id": card.assignment_id,
