@@ -19,8 +19,10 @@ def get_editor():
     if user_form.validate_on_submit():
             selected_department = user_form.department.data
             selected_batch = user_form.batch.data
-            all_selected_assignned_cards = db.session.execute(
-        db.select(TeacherAssignment).where(TeacherAssignment.batch_id==selected_batch ,TeacherAssignment.dept_id==selected_department)
-    ).scalars().all()
-            return redirect(url_for('editor.index',cards=all_selected_assignned_cards))
+            
+            return redirect(url_for(
+                'editor.index',
+                dept_id=selected_department,
+                batch_id=selected_batch)
+            )
     return render_template("before_editor.html",form=user_form)
