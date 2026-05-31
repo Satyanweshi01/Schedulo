@@ -54,7 +54,7 @@ function initializeEditor() {
     console.log('Initializing Schedulo editor...');
 
     // TODO: Fetch teachers and subjects from backend API
-    // For now using mock data - replace with actual API call
+    
     scheduleState.teachers = cards.map(card => ({
     id: card.teacher_id,
     name: card.teacher_name
