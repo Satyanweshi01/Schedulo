@@ -1,2 +1,7 @@
 .venv
 venv
+app\models\__pycache__
+__pycache__
+__pycache__/
+*.py[cod]
+instance/database.db

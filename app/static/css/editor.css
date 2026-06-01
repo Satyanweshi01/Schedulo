@@ -1,0 +1,274 @@
+/* Reset all default browser styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #ffffff;
+}
+
+/* Main layout using CSS Grid - divides page into table, faculty panel, week section, and controls */
+main {
+    height: 100vh;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    grid-template-rows: 1fr auto auto;
+}
+
+/* Table area containing the schedule grid (days, times, subjects) */
+.table-area {
+    grid-row: 1;
+    padding: 15px;
+    display: grid;
+    grid-template-columns: repeat(11, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    overflow-y: auto;
+}
+
+/* Individual boxes in the schedule grid */
+.box {
+    border: 2px solid #9C27B0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    position: relative;
+    min-height: 60px;
+}
+
+/* Hover effect for empty cells - provides visual feedback when user hovers */
+.box:hover:not(.th):not(.day):not(.recess) {
+    background-color: #f3e5f5;
+}
+
+/* Header cells (time slots) */
+.th {
+    width: 100%;
+    height: 50%;
+    margin-top: 30%;
+    font-weight: 700;
+    font-size: 1.2rem;
+    background-color: #e1bee7;
+    color: #4a148c;
+}
+
+/* Day column cells */
+.day {
+    font-weight: 550;
+    background-color: #f3e5f5;
+    color: #6a1b9a;
+}
+
+/* Recess/break indicator cells */
+.recess {
+    color: #6a1b9a;
+    font-weight: 500;
+    font-size: 3rem;
+    background-color: #ede7f6;
+}
+
+/* Right panel displaying faculty/teacher list */
+.faculty-area {
+    grid-row: 1;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    border: 2px solid #9C27B0;
+    margin: 10px 0px 0px 0px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 20px;
+    background-color: #fafafa;
+}
+
+/* Search input field for filtering teachers */
+.search {
+    min-width: 250px;
+    height: 50px;
+    margin-top: 10px;
+    border: 2px solid #9C27B0;
+    padding: 10px;
+    font-size: 1rem;
+    position: sticky;
+    top: 0;
+    background-color: #ffffff;
+    z-index: 10;
+    border-radius: 4px;
+}
+
+/* Teacher/faculty card - draggable item for schedule editing */
+.card {
+    background-color: #f3e5f5;
+    width: 80%;
+    min-height: 100px;
+    margin-bottom: 10px;
+    border: 2px solid #ce93d8;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    color: #4a148c;
+}
+
+/* Visual feedback when hovering over a teacher card */
+.card:hover {
+    background-color: #e1bee7;
+    box-shadow: 0 2px 8px rgba(156, 39, 176, 0.2);
+}
+
+/* Card selected state - shows when user selects a teacher to add to schedule */
+.card.selected {
+    background-color: #9C27B0;
+    color: white;
+    border-color: #7b1fa2;
+}
+
+/* Bottom control panel for navigation and PDF export */
+.control-area {
+    grid-column: 1 / 3;
+    grid-row: 3;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 2px solid #9C27B0;
+    background-color: #fafafa;
+}
+
+/* Individual control item container */
+.control-item {
+    margin: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+/* OK button - stores schedule JSON in variable */
+.btn-ok button {
+    width: 150px;
+    height: 50px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    background-color: #9C27B0;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-ok button:hover {
+    background-color: #7b1fa2;
+}
+
+.btn-ok button:active {
+    background-color: #6a1b9a;
+    transform: scale(0.98);
+}
+
+/* Info display for current week/date range - currently not in use */
+.sheet-info {
+    display: none;
+}
+
+/* Week section - displayed below the schedule table */
+.week-section {
+    grid-column: 1 / 3;
+    padding: 15px;
+    color: #4a148c;
+    font-size: 1rem;
+    background-color: #f3e5f5;
+    border: 2px solid #9C27B0;
+    border-top: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.week-section h2 {
+    margin: 0;
+}
+
+/* PDF download button styling */
+.btn-download button {
+    width: 200px;
+    height: 40px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    background-color: #9C27B0;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-download button:hover {
+    background-color: #7b1fa2;
+}
+
+/* Modal/dialog for editing schedule entries */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(156, 39, 176, 0.3);
+}
+
+.modal-content {
+    background-color: #ffffff;
+    margin: 10% auto;
+    padding: 20px;
+    border: 2px solid #9C27B0;
+    width: 300px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(156, 39, 176, 0.2);
+}
+
+.close {
+    color: #9C27B0;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #6a1b9a;
+}
+
+/* Schedule entry cell with background highlight */
+.scheduled {
+    background-color: #e1bee7;
+    font-weight: 500;
+    color: #4a148c;
+}
+
+/* JSON export button */
+.btn-export {
+    padding: 10px 20px;
+    background-color: #9C27B0;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 1rem;
+}
+
+.btn-export:hover {
+    background-color: #7b1fa2;
+}

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Landing After Page</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/landing_after.css') }}" />
+    </head>
+    <body>
+        <header class="dashboard-header">
+            <div>
+                <span class="eyebrow">Schedulo workspace</span>
+                <h1>Dashboard</h1>
+            </div>
+        </header>
+        <main>
+            <div class="manage-db-grid-area">
+                <div class="label">
+                    Manage Database
+                </div>
+                <div class="manage-db-main">
+                    <div class="btn">
+                        <a href="{{url_for('database_edit_form.get_subject')}}">
+                            <button type="submit">Add Subject</button>
+                        </a>
+                    </div>
+                    <div class="btn">
+                        <a href="{{url_for('database_edit_form.get_batch')}}">
+                            <button type="submit">Add Batch</button>
+                        </a>
+                    </div>
+                    <div class="btn">
+                        <a href="{{url_for('database_edit_form.get_department')}}">
+                            <button type="submit">Add Department</button>
+                        </a>
+                    </div>
+                    <div class="btn">
+                        <a href="{{url_for('database_edit_form.get_teacher')}}">
+                            <button type="submit">Add Teacher</button>
+                        </a>
+                    </div>
+                    <div class="btn">
+                        <a href="{{url_for('database_edit_form.get_assignment')}}">
+                            <button type="submit">Assign Teacher</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="history-grid-area">
+                <div class="label">
+                    History
+                </div>
+                <div class="history-main">
+                    <div class="history-item">History 1</div>
+                    <div class="history-item">History 2</div>
+                    <div class="history-item">History 3</div>
+                    <div class="history-item">History 4</div>
+                    <div class="history-item">History 5</div>
+                </div>
+                <div class="ctrl-area">
+                    <div class="btn">
+                        <a href="{{url_for('before_editor.get_editor')}}">
+                            <button type="submit">Make a Timetable</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

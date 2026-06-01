@@ -1,0 +1,130 @@
+body {
+    margin: 0;
+    padding: 0;
+    background:
+        radial-gradient(circle at top left, rgba(124, 58, 237, 0.18), transparent 30rem),
+        linear-gradient(135deg, #ffffff 0%, #f5f3ff 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Removed the box formatting completely */
+.container {
+    text-align: center;
+    padding: 20px;
+}
+
+/* Fixed width container prevents layout jumping when fonts change sizes */
+.title-wrapper {
+    width: 380px; 
+    margin: 0 auto;
+    text-align: left; /* Anchors the typing animation to the left */
+}
+
+.typedtext {
+    font-size: 4.5rem;
+    letter-spacing: 3px; 
+    color: #4a148c; /* Font color stays static */
+    white-space: nowrap;
+    overflow: hidden;
+    margin: 0; 
+    
+    /* 
+      1. typing: Slowed down to 6 seconds for a human feel
+      2. style-shift: Cycles through 3 fonts over 18 seconds (6s * 3)
+    */
+    animation: 
+        typing 6s ease-in-out infinite,
+        style-shift 18s infinite; 
+}
+
+/* Animates to 100% of the wrapper (380px), smoothly revealing the text */
+@keyframes typing {
+    0%, 10% { width: 0; }            
+    40%, 60% { width: 100%; }       
+    90%, 100% { width: 0; }          
+}
+
+/* Cycles through different font styles and families */
+@keyframes style-shift {
+    0%, 33.3% { 
+        font-family: 'Poppins', sans-serif;
+        font-style: normal;
+    }
+    33.4%, 66.6% { 
+        font-family: 'Courier New', Courier, monospace;
+        font-style: normal;
+    }
+    66.7%, 100% { 
+        font-family: 'Georgia', serif;
+        font-style: italic;
+    }
+}
+
+/* --- STATIC TAGLINE --- */
+.tagline-wrapper {
+    margin: 10px auto 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* No animations on the tagline */
+.tagline {
+    font-family: 'Caveat', cursive;
+    font-size: 2.2rem;
+    color: #555555; 
+    margin: 0;
+}
+
+.home-link {
+    display: inline-block;
+    margin-top: 34px;
+    text-decoration: none;
+}
+
+.home-button {
+    min-width: 230px;
+    min-height: 54px;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    color: #ffffff;
+    background: linear-gradient(135deg, #7c3aed, #5b21b6);
+    box-shadow: 0 18px 34px rgba(91, 33, 182, 0.28);
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+}
+
+.home-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 24px 42px rgba(91, 33, 182, 0.36);
+    filter: saturate(1.08);
+}
+
+.home-button:active {
+    transform: translateY(-1px);
+}
+
+@media (max-width: 520px) {
+    .title-wrapper {
+        width: 300px;
+    }
+
+    .typedtext {
+        font-size: 3.45rem;
+    }
+
+    .tagline {
+        font-size: 1.85rem;
+    }
+
+    .home-button {
+        min-width: 210px;
+    }
+}
