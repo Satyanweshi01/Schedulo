@@ -5,18 +5,18 @@
 }
 
 :root {
-    --purple-950: #2f165f;
-    --purple-800: #5b21b6;
-    --purple-700: #6d28d9;
-    --purple-600: #7c3aed;
-    --purple-100: #ede9fe;
-    --purple-50: #f5f3ff;
-    --ink: #1f1733;
-    --muted: #746a89;
-    --line: #ded6f2;
+    --navy-950: #071821;
+    --navy-800: #0e3a4a;
+    --teal-700: #0f766e;
+    --teal-600: #0891b2;
+    --teal-100: #ccfbf1;
+    --teal-50: #ecfeff;
+    --ink: #10202a;
+    --muted: #637582;
+    --line: rgba(14, 58, 74, 0.16);
     --white: #ffffff;
     --danger: #ef4444;
-    --shadow: 0 22px 60px rgba(72, 35, 139, 0.18);
+    --shadow: 0 22px 60px rgba(7, 24, 33, 0.18);
 }
 
 body {
@@ -24,8 +24,8 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     color: var(--ink);
     background:
-        radial-gradient(circle at top left, rgba(124, 58, 237, 0.2), transparent 32rem),
-        linear-gradient(135deg, #ffffff 0%, var(--purple-50) 100%);
+        radial-gradient(circle at top left, rgba(8, 145, 178, 0.22), transparent 32rem),
+        linear-gradient(135deg, #ffffff 0%, var(--teal-50) 100%);
 }
 
 .page-header {
@@ -37,13 +37,13 @@ body {
 
 .page-header h2 {
     margin-top: 8px;
-    color: var(--purple-950);
+    color: var(--navy-950);
     font-size: clamp(2rem, 5vw, 4rem);
     line-height: 1;
 }
 
 .eyebrow {
-    color: var(--purple-700);
+    color: var(--teal-700);
     font-size: 0.78rem;
     font-weight: 800;
     letter-spacing: 0.08em;
@@ -61,7 +61,7 @@ body {
 
 .subject-form,
 .curr-data-area {
-    border: 1px solid rgba(124, 58, 237, 0.16);
+    border: 1px solid rgba(14, 58, 74, 0.16);
     border-radius: 22px;
     background: rgba(255, 255, 255, 0.9);
     box-shadow: var(--shadow);
@@ -91,15 +91,15 @@ body {
     display: grid;
     place-items: center;
     color: var(--white);
-    background: linear-gradient(135deg, var(--purple-600), var(--purple-800));
-    box-shadow: 0 12px 26px rgba(91, 33, 182, 0.28);
+    background: linear-gradient(135deg, var(--teal-600), var(--navy-800));
+    box-shadow: 0 12px 26px rgba(8, 145, 178, 0.28);
     font-size: 1.8rem;
     line-height: 1;
 }
 
 .panel-heading h3,
 .curr-data-heading h3 {
-    color: var(--purple-950);
+    color: var(--navy-950);
     font-size: 1.35rem;
 }
 
@@ -116,7 +116,7 @@ body {
 }
 
 .field-group label {
-    color: var(--purple-950);
+    color: var(--navy-950);
     font-size: 0.92rem;
     font-weight: 700;
 }
@@ -135,8 +135,8 @@ body {
 }
 
 .field-group input:focus {
-    border-color: var(--purple-600);
-    box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.14);
+    border-color: var(--teal-600);
+    box-shadow: 0 0 0 4px rgba(14, 58, 74, 0.14);
     transform: translateY(-1px);
 }
 
@@ -148,8 +148,8 @@ input[type="submit"] {
     border-radius: 14px;
     cursor: pointer;
     color: var(--white);
-    background: linear-gradient(135deg, var(--purple-600), var(--purple-800));
-    box-shadow: 0 16px 28px rgba(91, 33, 182, 0.25);
+    background: linear-gradient(135deg, var(--teal-600), var(--navy-800));
+    box-shadow: 0 16px 28px rgba(8, 145, 178, 0.25);
     font-size: 1rem;
     font-weight: 800;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -157,7 +157,7 @@ input[type="submit"] {
 
 input[type="submit"]:hover {
     transform: translateY(-2px);
-    box-shadow: 0 20px 34px rgba(91, 33, 182, 0.32);
+    box-shadow: 0 20px 34px rgba(8, 145, 178, 0.32);
 }
 
 .curr-data-area {
@@ -168,7 +168,7 @@ input[type="submit"]:hover {
 .curr-data-heading {
     min-height: 92px;
     padding: 24px 28px;
-    border-bottom: 1px solid rgba(124, 58, 237, 0.14);
+    border-bottom: 1px solid rgba(14, 58, 74, 0.14);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -189,24 +189,24 @@ input[type="submit"]:hover {
 .curr-data-main::-webkit-scrollbar-thumb {
     border: 3px solid var(--white);
     border-radius: 999px;
-    background: #c4b5fd;
+    background: #0891b2;
 }
 
 .card {
     min-height: 94px;
     margin-bottom: 14px;
-    border: 1px solid rgba(124, 58, 237, 0.14);
+    border: 1px solid rgba(14, 58, 74, 0.14);
     border-radius: 18px;
     display: grid;
     grid-template-columns: 1fr 70px 70px;
     background: var(--white);
-    box-shadow: 0 12px 28px rgba(72, 35, 139, 0.09);
+    box-shadow: 0 12px 28px rgba(7, 24, 33, 0.09);
     transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
 }
 
 .card:hover {
-    border-color: rgba(124, 58, 237, 0.36);
-    box-shadow: 0 18px 36px rgba(72, 35, 139, 0.16);
+    border-color: rgba(8, 145, 178, 0.36);
+    box-shadow: 0 18px 36px rgba(7, 24, 33, 0.16);
     transform: translateY(-2px);
 }
 
@@ -219,7 +219,7 @@ input[type="submit"]:hover {
 .content-part {
     min-width: 0;
     padding: 20px 22px;
-    border-right: 1px solid rgba(124, 58, 237, 0.12);
+    border-right: 1px solid rgba(14, 58, 74, 0.12);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -245,8 +245,8 @@ input[type="submit"]:hover {
     max-width: 100%;
     padding: 8px 12px;
     border-radius: 999px;
-    color: var(--purple-800);
-    background: var(--purple-100);
+    color: var(--navy-800);
+    background: var(--teal-100);
     font-size: 0.95rem;
 }
 
@@ -264,7 +264,7 @@ input[type="submit"]:hover {
     border: none;
     border-radius: 14px;
     cursor: pointer;
-    background-color: var(--purple-50);
+    background-color: var(--teal-50);
     background-position: center;
     background-repeat: no-repeat;
     background-size: 22px;
@@ -294,14 +294,14 @@ input[type="submit"]:hover {
 .empty-state {
     margin: 22px;
     padding: 42px 22px;
-    border: 1px dashed #c4b5fd;
+    border: 1px dashed #0891b2;
     border-radius: 18px;
     text-align: center;
-    background: var(--purple-50);
+    background: var(--teal-50);
 }
 
 .empty-state h3 {
-    color: var(--purple-950);
+    color: var(--navy-950);
 }
 
 .empty-state p {

@@ -5,17 +5,20 @@
 }
 
 :root {
-    --purple-950: #2f165f;
-    --purple-800: #5b21b6;
-    --purple-700: #6d28d9;
-    --purple-600: #7c3aed;
-    --purple-100: #ede9fe;
-    --purple-50: #f5f3ff;
-    --ink: #1f1733;
-    --muted: #746a89;
-    --line: #ded6f2;
+    --navy-950: #071821;
+    --navy-800: #0e3a4a;
+    --teal-700: #0f766e;
+    --teal-600: #0891b2;
+    --teal-100: #ccfbf1;
+    --teal-50: #ecfeff;
+    --coral: #f9735b;
+    --amber: #f59e0b;
+    --ink: #10202a;
+    --muted: #637582;
+    --line: rgba(14, 58, 74, 0.16);
     --white: #ffffff;
-    --shadow: 0 22px 60px rgba(72, 35, 139, 0.18);
+    --glass: rgba(255, 255, 255, 0.72);
+    --shadow: 0 24px 70px rgba(7, 24, 33, 0.18);
 }
 
 body {
@@ -23,8 +26,9 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     color: var(--ink);
     background:
-        radial-gradient(circle at top left, rgba(124, 58, 237, 0.2), transparent 32rem),
-        linear-gradient(135deg, #ffffff 0%, var(--purple-50) 100%);
+        radial-gradient(circle at 12% 12%, rgba(8, 145, 178, 0.24), transparent 28rem),
+        radial-gradient(circle at 86% 8%, rgba(249, 115, 91, 0.18), transparent 24rem),
+        linear-gradient(135deg, #f8fafc 0%, #e6fffb 48%, #fff7ed 100%);
 }
 
 .editor-header {
@@ -38,13 +42,13 @@ body {
 
 .editor-header h1 {
     margin-top: 8px;
-    color: var(--purple-950);
+    color: var(--navy-950);
     font-size: clamp(2rem, 4.6vw, 3.7rem);
     line-height: 1;
 }
 
 .eyebrow {
-    color: var(--purple-700);
+    color: var(--teal-700);
     font-size: 0.78rem;
     font-weight: 800;
     letter-spacing: 0.08em;
@@ -53,20 +57,20 @@ body {
 
 .context-panel {
     min-width: min(100%, 520px);
-    border: 1px solid rgba(124, 58, 237, 0.16);
+    border: 1px solid var(--line);
     border-radius: 20px;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     overflow: hidden;
-    background: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 16px 38px rgba(72, 35, 139, 0.12);
-    backdrop-filter: blur(14px);
+    background: var(--glass);
+    box-shadow: 0 16px 38px rgba(7, 24, 33, 0.12);
+    backdrop-filter: blur(18px);
 }
 
 .context-panel div {
     min-width: 0;
     padding: 16px 18px;
-    border-right: 1px solid rgba(124, 58, 237, 0.14);
+    border-right: 1px solid var(--line);
 }
 
 .context-panel div:last-child {
@@ -86,8 +90,41 @@ body {
     display: block;
     margin-top: 6px;
     overflow-wrap: anywhere;
-    color: var(--purple-950);
+    color: var(--navy-950);
     font-size: 1rem;
+    line-height: 1.25;
+}
+
+.insight-strip {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.insight-strip div {
+    min-height: 76px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 16px 18px;
+    background: rgba(255, 255, 255, 0.64);
+    box-shadow: 0 14px 34px rgba(7, 24, 33, 0.11);
+    backdrop-filter: blur(18px);
+}
+
+.insight-strip span,
+.faculty-summary {
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.insight-strip strong {
+    display: block;
+    margin-top: 7px;
+    color: var(--navy-950);
     line-height: 1.25;
 }
 
@@ -97,7 +134,7 @@ main {
     margin: 0 auto 28px;
     display: grid;
     grid-template-columns: minmax(720px, 1fr) minmax(240px, 300px);
-    grid-template-rows: minmax(520px, 1fr) auto;
+    grid-template-rows: auto minmax(520px, 1fr) auto;
     gap: 20px;
 }
 
@@ -105,10 +142,10 @@ main {
 .faculty-area,
 .week-section,
 .control-area {
-    border: 1px solid rgba(124, 58, 237, 0.16);
-    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid var(--line);
+    background: var(--glass);
     box-shadow: var(--shadow);
-    backdrop-filter: blur(14px);
+    backdrop-filter: blur(18px);
 }
 
 .table-area {
@@ -132,41 +169,41 @@ main {
 .faculty-area::-webkit-scrollbar-thumb {
     border: 3px solid var(--white);
     border-radius: 999px;
-    background: #c4b5fd;
+    background: var(--teal-600);
 }
 
 .box {
     min-width: 0;
     min-height: 64px;
-    border: 1px solid var(--line);
+    border: 1px solid rgba(14, 58, 74, 0.14);
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
     padding: 8px;
     color: var(--ink);
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.78);
     text-align: center;
     transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .box:hover:not(.th):not(.day):not(.recess):not(.stream-cell) {
-    border-color: rgba(124, 58, 237, 0.42);
-    background: var(--purple-50);
-    box-shadow: inset 0 0 0 2px rgba(124, 58, 237, 0.08);
+    border-color: rgba(8, 145, 178, 0.46);
+    background: var(--teal-50);
+    box-shadow: inset 0 0 0 2px rgba(8, 145, 178, 0.1);
     cursor: pointer;
 }
 
 .th {
-    color: var(--purple-950);
-    background: linear-gradient(180deg, #ffffff, var(--purple-100));
+    color: var(--navy-950);
+    background: linear-gradient(180deg, rgba(255,255,255,0.86), var(--teal-100));
     font-size: clamp(0.72rem, 0.8vw, 0.95rem);
     font-weight: 800;
 }
 
 .day {
-    color: var(--purple-950);
-    background: var(--purple-50);
+    color: var(--navy-950);
+    background: rgba(204, 251, 241, 0.58);
     font-weight: 800;
 }
 
@@ -181,8 +218,8 @@ main {
 }
 
 .recess {
-    color: var(--purple-950);
-    background: #f1eefb;
+    color: var(--navy-950);
+    background: rgba(255, 237, 213, 0.82);
     font-size: clamp(1.8rem, 2.6vw, 3rem);
     font-weight: 800;
     letter-spacing: 0.04em;
@@ -209,20 +246,25 @@ main {
     top: 0;
     z-index: 10;
     color: var(--ink);
-    background: var(--white);
+    background: rgba(255, 255, 255, 0.86);
     font-size: 0.95rem;
-    box-shadow: 0 10px 22px rgba(72, 35, 139, 0.08);
+    box-shadow: 0 10px 22px rgba(7, 24, 33, 0.08);
 }
 
 .search:focus {
-    border-color: var(--purple-600);
-    box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.14);
+    border-color: var(--teal-600);
+    box-shadow: 0 0 0 4px rgba(8, 145, 178, 0.16);
+}
+
+.faculty-summary {
+    padding: 8px 2px 0;
+    line-height: 1.35;
 }
 
 .card {
     width: 100%;
     min-height: 92px;
-    border: 1px solid rgba(124, 58, 237, 0.14);
+    border: 1px solid var(--line);
     border-radius: 16px;
     cursor: pointer;
     padding: 14px;
@@ -231,25 +273,25 @@ main {
     align-items: center;
     justify-content: center;
     gap: 6px;
-    color: var(--purple-950);
-    background: var(--white);
-    box-shadow: 0 12px 28px rgba(72, 35, 139, 0.08);
+    color: var(--navy-950);
+    background: rgba(255, 255, 255, 0.82);
+    box-shadow: 0 12px 28px rgba(7, 24, 33, 0.08);
     text-align: center;
     transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease, color 0.22s ease;
 }
 
 .card:hover {
-    border-color: rgba(124, 58, 237, 0.34);
-    background: var(--purple-50);
-    box-shadow: 0 18px 34px rgba(72, 35, 139, 0.14);
+    border-color: rgba(8, 145, 178, 0.38);
+    background: var(--teal-50);
+    box-shadow: 0 18px 34px rgba(7, 24, 33, 0.14);
     transform: translateY(-2px);
 }
 
 .card.selected {
     border-color: transparent;
     color: var(--white);
-    background: linear-gradient(135deg, var(--purple-600), var(--purple-800));
-    box-shadow: 0 18px 34px rgba(91, 33, 182, 0.26);
+    background: linear-gradient(135deg, var(--teal-600), var(--navy-800));
+    box-shadow: 0 18px 34px rgba(8, 145, 178, 0.26);
 }
 
 .card-teacher {
@@ -264,6 +306,32 @@ main {
     font-size: 0.88rem;
 }
 
+.card-workload {
+    padding: 5px 9px;
+    border-radius: 999px;
+    color: var(--navy-950);
+    background: rgba(204, 251, 241, 0.8);
+    font-size: 0.72rem;
+    font-weight: 800;
+}
+
+.card.selected .card-workload {
+    color: var(--navy-950);
+    background: rgba(255, 255, 255, 0.82);
+}
+
+.card-context {
+    max-width: 100%;
+    color: var(--muted);
+    font-size: 0.72rem;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+}
+
+.card.selected .card-context {
+    color: rgba(255, 255, 255, 0.82);
+}
+
 .week-section {
     grid-column: 1;
     border-radius: 18px;
@@ -271,7 +339,7 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--purple-950);
+    color: var(--navy-950);
 }
 
 .week-section h2 {
@@ -310,8 +378,8 @@ main {
     border-radius: 14px;
     cursor: pointer;
     color: var(--white);
-    background: linear-gradient(135deg, var(--purple-600), var(--purple-800));
-    box-shadow: 0 16px 28px rgba(91, 33, 182, 0.24);
+    background: linear-gradient(135deg, var(--teal-600), var(--navy-800));
+    box-shadow: 0 16px 28px rgba(8, 145, 178, 0.24);
     font-size: 0.95rem;
     font-weight: 800;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -319,7 +387,7 @@ main {
 
 .btn-ok button:hover,
 .btn-download button:hover {
-    box-shadow: 0 20px 34px rgba(91, 33, 182, 0.32);
+    box-shadow: 0 20px 34px rgba(8, 145, 178, 0.32);
     transform: translateY(-2px);
 }
 
@@ -329,9 +397,15 @@ main {
 }
 
 .scheduled {
-    color: var(--purple-950);
-    background: #e9ddff;
+    color: var(--navy-950);
+    background: rgba(204, 251, 241, 0.78);
     font-weight: 600;
+}
+
+.conflict-cell {
+    border-color: var(--coral) !important;
+    background: #fff1f0 !important;
+    box-shadow: inset 0 0 0 2px rgba(249, 115, 91, 0.32);
 }
 
 .scheduled.merge-left {
@@ -393,14 +467,14 @@ main {
     border-radius: 999px;
     cursor: pointer;
     color: var(--white);
-    background: var(--purple-800);
+    background: var(--navy-800);
     font-size: 0.75rem;
     line-height: 22px;
     z-index: 2;
 }
 
 .remove-assignment:hover {
-    background: var(--purple-950);
+    background: var(--coral);
 }
 
 .modal,
@@ -446,7 +520,7 @@ main {
 
     .context-panel div {
         border-right: none;
-        border-bottom: 1px solid rgba(124, 58, 237, 0.14);
+        border-bottom: 1px solid var(--line);
     }
 
     .context-panel div:last-child {
@@ -459,6 +533,10 @@ main {
 
     .table-area {
         grid-template-columns: 76px 86px repeat(9, 88px);
+    }
+
+    .insight-strip {
+        grid-template-columns: 1fr;
     }
 
     .control-area {

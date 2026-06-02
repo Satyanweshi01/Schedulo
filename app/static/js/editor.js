@@ -36,6 +36,9 @@ const scheduleState = {
 
     // Stored JSON data - will hold the schedule JSON when OK is pressed
     storedJSON: null,
+
+    // Teacher bookings already saved in other department/batch timetables
+    teacherConflicts: {},
 };
 
 /**
@@ -64,12 +67,17 @@ async function loadTeacherData() {
 async function initializeEditor() {
     console.log("Initializing Schedulo editor...");
 
+    scheduleState.teacherConflicts = teacherConflicts || {};
     scheduleState.teachers = cards.map((card) => ({
         assignmentId: card.assignment_id,
         id: card.teacher_id,
         name: card.teacher_name,
         subjectId: card.subject_id,
         subject: card.subject_name,
+        department: card.department_name,
+        batch: card.batch_name,
+        assignmentCount: card.assignment_count,
+        otherAssignments: card.other_assignments || [],
     }));
 
     // Initialize empty schedule structure
@@ -86,6 +94,8 @@ async function initializeEditor() {
             };
         });
     });
+
+    hydrateSavedSchedule();
 
     setupScheduleCells();
 }
@@ -140,8 +150,11 @@ function setupScheduleCells() {
 
             cell.classList.add("schedule-cell");
             cell.addEventListener("click", () => assignSelectedTeacherToCell(cell));
+            renderCellFromState(cell);
         }
     });
+
+    scheduleState.days.forEach((day) => updateMergedTeacherBorders(day));
 }
 
 /**
@@ -181,6 +194,20 @@ function assignSelectedTeacherToCell(cell) {
 
     if (!day || !timeSlot) return;
 
+    const conflicts = getTeacherConflicts(
+        scheduleState.selectedAssignment.teacherId,
+        day,
+        timeSlot
+    );
+    if (conflicts.length) {
+        const conflictText = conflicts
+            .map((item) => `${item.department} ${item.batch} (${item.subject})`)
+            .join(", ");
+        markConflictCell(cell);
+        alert(`${scheduleState.selectedAssignment.teacher} is already booked at ${timeSlot} on ${day}: ${conflictText}`);
+        return;
+    }
+
     scheduleState.schedule[day][timeSlot] = {
         assignmentId: scheduleState.selectedAssignment.assignmentId,
         teacherId: scheduleState.selectedAssignment.teacherId,
@@ -192,10 +219,12 @@ function assignSelectedTeacherToCell(cell) {
 
     renderAssignedCell(cell, scheduleState.schedule[day][timeSlot]);
     updateMergedTeacherBorders(day);
+    updateSaveStatus("Unsaved changes");
 }
 
 function renderAssignedCell(cell, entry) {
     cell.classList.add("scheduled");
+    cell.classList.remove("conflict-cell");
 
     const removeButton = document.createElement("button");
     removeButton.className = "remove-assignment";
@@ -222,6 +251,16 @@ function renderAssignedCell(cell, entry) {
     cell.replaceChildren(removeButton, content);
 }
 
+function renderCellFromState(cell) {
+    const day = cell.dataset.day;
+    const timeSlot = cell.dataset.timeSlot;
+    const entry = scheduleState.schedule[day]?.[timeSlot];
+
+    if (entry?.assignmentId) {
+        renderAssignedCell(cell, entry);
+    }
+}
+
 function removeTeacherFromCell(cell) {
     const day = cell.dataset.day;
     const timeSlot = cell.dataset.timeSlot;
@@ -238,8 +277,38 @@ function removeTeacherFromCell(cell) {
     };
 
     cell.classList.remove("scheduled");
+    cell.classList.remove("conflict-cell");
     cell.innerHTML = "";
     updateMergedTeacherBorders(day);
+    updateSaveStatus("Unsaved changes");
+}
+
+function getTeacherConflicts(teacherId, day, timeSlot) {
+    if (!teacherId) return [];
+    return scheduleState.teacherConflicts[String(teacherId)]?.[`${day}|${timeSlot}`] || [];
+}
+
+function markConflictCell(cell) {
+    cell.classList.add("conflict-cell");
+    setTimeout(() => cell.classList.remove("conflict-cell"), 1800);
+}
+
+function hydrateSavedSchedule() {
+    Object.entries(savedSchedule || {}).forEach(([day, slots]) => {
+        if (!scheduleState.schedule[day]) return;
+
+        Object.entries(slots || {}).forEach(([slot, entry]) => {
+            if (!scheduleState.schedule[day][slot]) return;
+            scheduleState.schedule[day][slot] = {
+                assignmentId: entry.assignmentId,
+                teacherId: entry.teacherId,
+                subjectId: entry.subjectId,
+                subject: entry.subject || "",
+                teacher: entry.teacher || "",
+                stream: entry.stream || "",
+            };
+        });
+    });
 }
 
 function updateMergedTeacherBorders(day) {
@@ -378,12 +447,22 @@ function renderTeacherCards() {
         subjectName.className = "card-subject";
         subjectName.textContent = teacher.subject;
 
+        const workload = document.createElement("span");
+        workload.className = "card-workload";
+        workload.textContent = `${teacher.assignmentCount} stream${teacher.assignmentCount === 1 ? "" : "s"}`;
+
+        const context = document.createElement("span");
+        context.className = "card-context";
+        context.textContent = teacher.otherAssignments.length
+            ? `Also: ${teacher.otherAssignments.slice(0, 2).join("; ")}`
+            : `${teacher.department} / ${teacher.batch}`;
+
         card.dataset.assignmentId = teacher.assignmentId;
         card.dataset.teacherId = teacher.id;
         card.dataset.teacherName = teacher.name;
         card.dataset.subjectId = teacher.subjectId;
         card.dataset.subjectName = teacher.subject;
-        card.append(teacherName, subjectName);
+        card.append(teacherName, subjectName, workload, context);
 
         card.addEventListener("click", function () {
             selectTeacher(this);
@@ -428,6 +507,8 @@ function generateScheduleJSON() {
             creationDate: new Date().toISOString(),
             institution: "Your Institution Name",
             collegeName: editorContext.college_name,
+            deptId: editorContext.dept_id,
+            batchId: editorContext.batch_id,
             departmentName: editorContext.department_name,
             batchName: editorContext.batch_name,
             week: editorContext.week,
@@ -446,11 +527,46 @@ function generateScheduleJSON() {
  * This function is called when "OK" button is pressed
  * The JSON is stored in scheduleState.storedJSON and ready to be sent to backend
  */
-function storeScheduleJSON() {
+async function storeScheduleJSON() {
     scheduleState.storedJSON = generateScheduleJSON();
 
     console.log("Schedule JSON stored in variable:", scheduleState.storedJSON);
-    alert("Timetable is saved in the database successfully");
+    updateSaveStatus("Saving...");
+
+    try {
+        const response = await fetch("/editor/save", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(scheduleState.storedJSON),
+        });
+        const result = await response.json();
+
+        if (!response.ok) {
+            highlightServerConflicts(result.conflicts || []);
+            throw new Error(result.message || "Timetable save failed");
+        }
+
+        updateSaveStatus(result.message || "Saved");
+        alert(result.message || "Timetable is saved successfully.");
+    } catch (error) {
+        console.error(error);
+        updateSaveStatus("Fix conflicts");
+        alert(error.message || "Timetable save failed. Please try again.");
+    }
+}
+
+function highlightServerConflicts(conflicts) {
+    conflicts.forEach((conflict) => {
+        const cell = getScheduleCell(conflict.day, conflict.timeSlot);
+        if (cell) markConflictCell(cell);
+    });
+}
+
+function updateSaveStatus(text) {
+    const status = document.getElementById("save-status");
+    if (status) status.textContent = text;
 }
 
 /**

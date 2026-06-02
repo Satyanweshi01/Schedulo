@@ -48,14 +48,22 @@
             </div>
             <div class="history-grid-area">
                 <div class="label">
-                    History
+                    Saved Timetables
                 </div>
                 <div class="history-main">
-                    <div class="history-item">History 1</div>
-                    <div class="history-item">History 2</div>
-                    <div class="history-item">History 3</div>
-                    <div class="history-item">History 4</div>
-                    <div class="history-item">History 5</div>
+                    {% for item in history %}
+                    <a class="history-item" href="{{ url_for('editor.index', dept_id=item.dept_id, batch_id=item.batch_id) }}">
+                        <span>{{ item.name }}</span>
+                        <strong>{{ item.department }} / {{ item.batch }}</strong>
+                        <small>{{ item.entries }} scheduled classes</small>
+                    </a>
+                    {% else %}
+                    <div class="history-item empty-history">
+                        <span>No saved timetables yet</span>
+                        <strong>Create one from the editor</strong>
+                        <small>Saved routines will appear here</small>
+                    </div>
+                    {% endfor %}
                 </div>
                 <div class="ctrl-area">
                     <div class="btn">
