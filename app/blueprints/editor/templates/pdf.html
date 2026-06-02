@@ -152,7 +152,7 @@
                     {% for day in days %}
                     <tr>
                         <td class="day-cell">{{ "<br>".join(day.upper()) | safe }}</td>
-                        <td class="stream-cell">{{ metadata.get("batchName", "Selected Stream") }}</td>
+                        <td class="stream-cell">{{ metadata.get("departmentName", "Selected Stream") }}</td>
                         {% for slot in time_slots %}
                             {% if loop.index0 == 4 %}
                             <td class="recess-cell">R<br />E<br />C<br />E<br />S<br />S</td>

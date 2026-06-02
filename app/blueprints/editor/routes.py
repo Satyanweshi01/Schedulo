@@ -21,6 +21,16 @@ def index():
     current_week = week()
     dept_id = request.args.get("dept_id",type=int)
     batch_id = request.args.get("batch_id",type=int)
+    department = db.session.get(Department, dept_id) if dept_id else None
+    batch = db.session.get(Batch, batch_id) if batch_id else None
+    editor_context = {
+        "dept_id": dept_id,
+        "batch_id": batch_id,
+        "department_name": department.name if department else "",
+        "batch_name": batch.name if batch else "",
+        "week": current_week,
+        "college_name": "BENGAL INSTITUTE OF TECHNOLOGY",
+    }
 
     cards = db.session.execute(
         db.select(TeacherAssignment).where(
@@ -160,7 +170,7 @@ def build_timetable_pdf(payload):
     story.append(Paragraph(subtitle, subtitle_style))
     story.append(Spacer(1, 0.15 * inch))
 
-    story.append(build_routine_table(days, schedule, time_slots, batch_name, cell_style, header_style))
+    story.append(build_routine_table(days, schedule, time_slots, department_name, cell_style, header_style))
 
     doc.build(story)
     buffer.seek(0)
