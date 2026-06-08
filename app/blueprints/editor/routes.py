@@ -15,6 +15,20 @@ from ...extensions import db
 from ...models import *
 
 
+DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+TIME_SLOTS = [
+    "10:00-10:50",
+    "10:50-11:40",
+    "11:40-12:30",
+    "12:30-1:20",
+    "1:20-2:00",
+    "2:00-2:50",
+    "2:50-3:40",
+    "3:40-4:30",
+    "4:30-5:20",
+]
+
+
 @editor_bp.route("/")
 def index():
     # week data
@@ -32,50 +46,16 @@ def index():
         "college_name": "BENGAL INSTITUTE OF TECHNOLOGY",
     }
     current_timetable = get_timetable(current_week, dept_id, batch_id)
-
-    cards = db.session.execute(
-        db.select(TeacherAssignment).where(
-            TeacherAssignment.batch_id == batch_id,
-            TeacherAssignment.dept_id == dept_id
-        )
-    ).scalars().all()
-    # eta json banache cards theke
-
-    cards_json = [
-    {
-        "assignment_id": card.assignment_id,
-        "teacher_id": card.teacher.teacher_id,
-        "teacher_name": card.teacher.name,
-        "subject_id": card.subject.subject_id,
-        "subject_name": card.subject.name,
-        "batch_id": card.batch.batch_id,
-        "batch_name": card.batch.name,
-        "department_id": card.department.dept_id,
-        "department_name": card.department.name,
-        "assignment_count": count_teacher_assignments(card.teacher_id),
-        "other_assignments": teacher_assignment_labels(card.teacher_id, card.assignment_id),
-    }
-    for card in cards
-    ]
-
-    # for card in cards:
-    #     cards_json = ({
-    #         "assignment_id": card.assignment_id,
-    #         "teacher_id": card.teacher.teacher_id,
-    #         "teacher_name": card.teacher.name,
-    #         "subject_id": card.subject.subject_id,
-    #         "subject_name": card.subject.name,
-    #         "batch_id": card.batch.batch_id,
-    #         "batch_name": card.batch.name
-    #     })
+    editor_state = build_editor_state(current_week, dept_id, batch_id, current_timetable)
 
     return render_template(
         "editor.html",
         week=current_week,
-        cards_json=cards_json,
+        cards_json=editor_state["cards"],
         editor_context=editor_context,
-        saved_schedule=load_saved_schedule(current_timetable),
-        teacher_conflicts=load_teacher_conflicts(current_week, current_timetable),
+        saved_schedule=editor_state["savedSchedule"],
+        teacher_conflicts=editor_state["teacherConflicts"],
+        initial_editor_state=editor_state,
     )
 
 
@@ -125,6 +105,49 @@ def save_timetable():
 
     db.session.commit()
     return jsonify({"ok": True, "message": f"Saved {saved_count} scheduled classes."})
+
+@editor_bp.route("/api/check_teacher_conflict", methods=["POST"])
+def check_teacher_conflict():
+    payload = request.get_json(silent=True) or {}
+    teacher_id = payload.get("teacherId")
+    day = payload.get("day")
+    time_slot = payload.get("timeSlot")
+    timetable_name = payload.get("week") or week()
+    dept_id = payload.get("deptId")
+    batch_id = payload.get("batchId")
+    dept_id = int(dept_id) if dept_id else None
+    batch_id = int(batch_id) if batch_id else None
+
+    if not teacher_id or not day or not time_slot:
+        return jsonify({"ok": False, "message": "Teacher, day, and time slot are required."}), 400
+
+    current_timetable = get_timetable(timetable_name, dept_id, batch_id)
+    conflicts = get_teacher_slot_conflicts(
+        int(teacher_id),
+        day,
+        time_slot,
+        timetable_name,
+        current_timetable,
+    )
+    return jsonify({
+        "ok": True,
+        "hasConflict": bool(conflicts),
+        "conflicts": conflicts,
+        "profile": get_teacher_workload_profile(int(teacher_id), timetable_name, current_timetable),
+    })
+
+
+@editor_bp.route("/api/teacher/<int:teacher_id>/profile")
+def teacher_profile(teacher_id):
+    timetable_name = request.args.get("week") or week()
+    dept_id = request.args.get("dept_id", type=int)
+    batch_id = request.args.get("batch_id", type=int)
+    current_timetable = get_timetable(timetable_name, dept_id, batch_id)
+    return jsonify({
+        "ok": True,
+        "profile": get_teacher_workload_profile(teacher_id, timetable_name, current_timetable),
+    })
+
 
 
 @editor_bp.route("/pdf", methods=["GET", "POST"])
@@ -385,6 +408,52 @@ def slot_label(timeslot):
     return f"{timeslot.start_time}-{timeslot.end_time}"
 
 
+def build_editor_state(timetable_name, dept_id, batch_id, current_timetable):
+    return {
+        "cards": teacher_cards_for_context(dept_id, batch_id, timetable_name, current_timetable),
+        "days": DAYS,
+        "timeSlots": TIME_SLOTS,
+        "savedSchedule": load_saved_schedule(current_timetable),
+        "teacherConflicts": load_teacher_conflicts(timetable_name, current_timetable),
+    }
+
+
+def teacher_cards_for_context(dept_id, batch_id, timetable_name, current_timetable):
+    if not dept_id or not batch_id:
+        return []
+
+    assignments = db.session.execute(
+        db.select(TeacherAssignment)
+        .where(
+            TeacherAssignment.batch_id == batch_id,
+            TeacherAssignment.dept_id == dept_id,
+        )
+        .order_by(TeacherAssignment.assignment_id)
+    ).scalars().all()
+
+    return [
+        {
+            "assignment_id": assignment.assignment_id,
+            "teacher_id": assignment.teacher.teacher_id,
+            "teacher_name": assignment.teacher.name,
+            "subject_id": assignment.subject.subject_id,
+            "subject_name": assignment.subject.name,
+            "batch_id": assignment.batch.batch_id,
+            "batch_name": assignment.batch.name,
+            "department_id": assignment.department.dept_id,
+            "department_name": assignment.department.name,
+            "assignment_count": count_teacher_assignments(assignment.teacher_id),
+            "other_assignments": teacher_assignment_labels(assignment.teacher_id, assignment.assignment_id),
+            "workload_profile": get_teacher_workload_profile(
+                assignment.teacher_id,
+                timetable_name,
+                current_timetable,
+            ),
+        }
+        for assignment in assignments
+    ]
+
+
 def count_teacher_assignments(teacher_id):
     return db.session.execute(
         db.select(db.func.count(TeacherAssignment.assignment_id)).where(
@@ -405,6 +474,81 @@ def teacher_assignment_labels(teacher_id, current_assignment_id):
         f"{assignment.department.name} / {assignment.batch.name} / {assignment.subject.name}"
         for assignment in assignments
     ]
+
+
+
+
+def get_teacher_workload_profile(teacher_id, timetable_name=None, current_timetable=None):
+    teacher = db.session.get(Teacher, teacher_id)
+    if not teacher:
+        return {
+            "teacherId": teacher_id,
+            "teacherName": "",
+            "assignmentCount": 0,
+            "scheduledClassCount": 0,
+            "currentWeekClassCount": 0,
+            "assignments": [],
+            "dailyLoad": {},
+        }
+
+    assignments = db.session.execute(
+        db.select(TeacherAssignment).where(TeacherAssignment.teacher_id == teacher_id)
+    ).scalars().all()
+
+    scheduled_rows = teacher_scheduled_rows(teacher_id, timetable_name)
+    daily_load = {}
+    current_timetable_id = current_timetable.timetable_id if current_timetable else None
+    current_week_class_count = 0
+
+    for _, timeslot, _, timetable, department, batch, subject in scheduled_rows:
+        label = slot_label(timeslot)
+        daily_load.setdefault(timeslot.day, []).append({
+            "timeSlot": label,
+            "department": department.name,
+            "batch": batch.name,
+            "subject": subject.name,
+            "isCurrentTimetable": timetable.timetable_id == current_timetable_id,
+        })
+        if timetable.timetable_id == current_timetable_id:
+            current_week_class_count += 1
+
+    for slots in daily_load.values():
+        slots.sort(key=lambda item: TIME_SLOTS.index(item["timeSlot"]) if item["timeSlot"] in TIME_SLOTS else 999)
+
+    return {
+        "teacherId": teacher.teacher_id,
+        "teacherName": teacher.name,
+        "assignmentCount": len(assignments),
+        "scheduledClassCount": len(scheduled_rows),
+        "currentWeekClassCount": current_week_class_count,
+        "assignments": [
+            {
+                "assignmentId": assignment.assignment_id,
+                "department": assignment.department.name,
+                "batch": assignment.batch.name,
+                "subject": assignment.subject.name,
+            }
+            for assignment in assignments
+        ],
+        "dailyLoad": daily_load,
+    }
+
+
+def teacher_scheduled_rows(teacher_id, timetable_name=None):
+    query = (
+        db.select(TimeTableEntry, Timeslot, TeacherAssignment, Timetable, Department, Batch, Subject)
+        .join(Timeslot, TimeTableEntry.timeslot_id == Timeslot.timeslot_id)
+        .join(TeacherAssignment, TimeTableEntry.ta_id == TeacherAssignment.assignment_id)
+        .join(Timetable, TimeTableEntry.timetable_id == Timetable.timetable_id)
+        .join(Department, Timetable.dept_id == Department.dept_id)
+        .join(Batch, Timetable.batch_id == Batch.batch_id)
+        .join(Subject, TeacherAssignment.subject_id == Subject.subject_id)
+        .where(TeacherAssignment.teacher_id == teacher_id)
+    )
+    if timetable_name:
+        query = query.where(Timetable.name == timetable_name)
+    query = query.order_by(Timeslot.slot_order)
+    return db.session.execute(query).all()
 
 
 def load_saved_schedule(timetable):
@@ -459,6 +603,44 @@ def load_teacher_conflicts(timetable_name, current_timetable):
             "subject": subject.name,
         })
     return conflicts
+
+
+
+
+def get_teacher_slot_conflicts(teacher_id, day, time_slot, timetable_name, current_timetable=None):
+    current_timetable_id = current_timetable.timetable_id if current_timetable else None
+    start_time, end_time = split_slot_label(time_slot)
+    query = (
+        db.select(TimeTableEntry, Timeslot, TeacherAssignment, Timetable, Department, Batch, Subject, Teacher)
+        .join(Timeslot, TimeTableEntry.timeslot_id == Timeslot.timeslot_id)
+        .join(TeacherAssignment, TimeTableEntry.ta_id == TeacherAssignment.assignment_id)
+        .join(Timetable, TimeTableEntry.timetable_id == Timetable.timetable_id)
+        .join(Department, Timetable.dept_id == Department.dept_id)
+        .join(Batch, Timetable.batch_id == Batch.batch_id)
+        .join(Subject, TeacherAssignment.subject_id == Subject.subject_id)
+        .join(Teacher, TeacherAssignment.teacher_id == Teacher.teacher_id)
+        .where(
+            Timetable.name == timetable_name,
+            TeacherAssignment.teacher_id == teacher_id,
+            Timeslot.day == day,
+            Timeslot.start_time == start_time,
+            Timeslot.end_time == end_time,
+        )
+    )
+    if current_timetable_id:
+        query = query.where(Timetable.timetable_id != current_timetable_id)
+
+    return [
+        {
+            "teacher": teacher.name,
+            "department": department.name,
+            "batch": batch.name,
+            "subject": subject.name,
+            "day": timeslot.day,
+            "timeSlot": slot_label(timeslot),
+        }
+        for _, timeslot, _, _, department, batch, subject, teacher in timetable_entry_rows(query)
+    ]
 
 
 def find_save_conflicts(schedule, days, time_slots, timetable, timetable_name):

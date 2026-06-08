@@ -261,6 +261,48 @@ main {
     line-height: 1.35;
 }
 
+.teacher-profile {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.74);
+    box-shadow: 0 10px 22px rgba(7, 24, 33, 0.08);
+}
+
+.teacher-profile span {
+    display: block;
+    color: var(--muted);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.teacher-profile strong {
+    display: block;
+    margin-top: 6px;
+    color: var(--navy-950);
+    overflow-wrap: anywhere;
+}
+
+.teacher-profile p,
+.teacher-profile li {
+    margin-top: 7px;
+    color: var(--muted);
+    font-size: 0.78rem;
+    line-height: 1.35;
+}
+
+.teacher-profile ul {
+    margin: 8px 0 0;
+    padding-left: 16px;
+}
+
+.teacher-profile b {
+    color: var(--navy-800);
+}
+
 .card {
     width: 100%;
     min-height: 92px;

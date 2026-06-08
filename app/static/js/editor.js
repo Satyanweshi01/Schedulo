@@ -19,26 +19,18 @@ const scheduleState = {
     subjects: [],
 
     // All time slots
-    timeSlots: [
-        "10:00-10:50",
-        "10:50-11:40",
-        "11:40-12:30",
-        "12:30-1:20",
-        "1:20-2:00",
-        "2:00-2:50",
-        "2:50-3:40",
-        "3:40-4:30",
-        "4:30-5:20",
-    ],
+    timeSlots: [],
 
     // Days of the week
-    days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    days: [],
 
     // Stored JSON data - will hold the schedule JSON when OK is pressed
     storedJSON: null,
 
     // Teacher bookings already saved in other department/batch timetables
     teacherConflicts: {},
+
+    selectedTeacherProfile: null,
 };
 
 /**
@@ -68,6 +60,8 @@ async function initializeEditor() {
     console.log("Initializing Schedulo editor...");
 
     scheduleState.teacherConflicts = teacherConflicts || {};
+    scheduleState.days = initialEditorState.days || [];
+    scheduleState.timeSlots = initialEditorState.timeSlots || [];
     scheduleState.teachers = cards.map((card) => ({
         assignmentId: card.assignment_id,
         id: card.teacher_id,
@@ -78,6 +72,7 @@ async function initializeEditor() {
         batch: card.batch_name,
         assignmentCount: card.assignment_count,
         otherAssignments: card.other_assignments || [],
+        workloadProfile: card.workload_profile || null,
     }));
 
     // Initialize empty schedule structure
@@ -179,11 +174,16 @@ function selectTeacher(cardElement) {
         subjectId: Number(cardElement.dataset.subjectId),
         subject: cardElement.dataset.subjectName,
     };
+    scheduleState.selectedTeacherProfile = scheduleState.teachers.find(
+        (teacher) => teacher.assignmentId === scheduleState.selectedAssignment.assignmentId
+    )?.workloadProfile || null;
 
     console.log("Selected teacher:", scheduleState.selectedTeacher);
+    renderTeacherProfile(scheduleState.selectedTeacherProfile);
+    refreshTeacherProfile(scheduleState.selectedAssignment.teacherId);
 }
 
-function assignSelectedTeacherToCell(cell) {
+async function assignSelectedTeacherToCell(cell) {
     if (!scheduleState.selectedAssignment) {
         alert("Please select a teacher first.");
         return;
@@ -194,7 +194,7 @@ function assignSelectedTeacherToCell(cell) {
 
     if (!day || !timeSlot) return;
 
-    const conflicts = getTeacherConflicts(
+    const conflicts = await checkTeacherConflicts(
         scheduleState.selectedAssignment.teacherId,
         day,
         timeSlot
@@ -286,6 +286,36 @@ function removeTeacherFromCell(cell) {
 function getTeacherConflicts(teacherId, day, timeSlot) {
     if (!teacherId) return [];
     return scheduleState.teacherConflicts[String(teacherId)]?.[`${day}|${timeSlot}`] || [];
+}
+
+async function checkTeacherConflicts(teacherId, day, timeSlot) {
+    try {
+        const response = await fetch("/editor/api/check_teacher_conflict", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                teacherId,
+                day,
+                timeSlot,
+                week: editorContext.week,
+                deptId: editorContext.dept_id,
+                batchId: editorContext.batch_id,
+            }),
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || "Conflict check failed");
+
+        if (result.profile) {
+            scheduleState.selectedTeacherProfile = result.profile;
+            renderTeacherProfile(result.profile);
+        }
+        return result.conflicts || [];
+    } catch (error) {
+        console.error(error);
+        return getTeacherConflicts(teacherId, day, timeSlot);
+    }
 }
 
 function markConflictCell(cell) {
@@ -549,6 +579,9 @@ async function storeScheduleJSON() {
         }
 
         updateSaveStatus(result.message || "Saved");
+        if (scheduleState.selectedAssignment) {
+            refreshTeacherProfile(scheduleState.selectedAssignment.teacherId);
+        }
         alert(result.message || "Timetable is saved successfully.");
     } catch (error) {
         console.error(error);
@@ -567,6 +600,76 @@ function highlightServerConflicts(conflicts) {
 function updateSaveStatus(text) {
     const status = document.getElementById("save-status");
     if (status) status.textContent = text;
+}
+
+async function refreshTeacherProfile(teacherId) {
+    if (!teacherId) return;
+
+    const params = new URLSearchParams({
+        week: editorContext.week || "",
+        dept_id: editorContext.dept_id || "",
+        batch_id: editorContext.batch_id || "",
+    });
+
+    try {
+        const response = await fetch(`/editor/api/teacher/${teacherId}/profile?${params.toString()}`);
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || "Profile load failed");
+
+        scheduleState.selectedTeacherProfile = result.profile;
+        renderTeacherProfile(result.profile);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function renderTeacherProfile(profile) {
+    const panel = document.getElementById("teacher-profile");
+    if (!panel) return;
+
+    if (!profile) {
+        panel.innerHTML = `
+            <span>Teacher profile</span>
+            <strong>Select a teacher</strong>
+            <p>Workload and conflicts are checked from the saved database timetable.</p>
+        `;
+        return;
+    }
+
+    const dailyItems = Object.entries(profile.dailyLoad || {})
+        .map(([day, slots]) => {
+            const slotText = slots.map((slot) => `${slot.timeSlot} ${slot.department}/${slot.batch}`).join(", ");
+            return `<li><b>${escapeHTML(day)}</b>: ${escapeHTML(slotText)}</li>`;
+        })
+        .join("");
+
+    const assignmentText = (profile.assignments || [])
+        .slice(0, 3)
+        .map((assignment) => `${assignment.department}/${assignment.batch}/${assignment.subject}`)
+        .join("; ");
+
+    panel.innerHTML = `
+        <span>Teacher profile</span>
+        <strong>${escapeHTML(profile.teacherName || "Teacher")}</strong>
+        <p>${profile.assignmentCount || 0} stream${profile.assignmentCount === 1 ? "" : "s"} assigned · ${profile.scheduledClassCount || 0} saved class${profile.scheduledClassCount === 1 ? "" : "es"} this week</p>
+        <p>${escapeHTML(assignmentText || "No subject assignment found.")}</p>
+        <ul>${dailyItems || "<li>No saved classes this week.</li>"}</ul>
+    `;
+
+    const loadStatus = document.getElementById("load-status");
+    if (loadStatus) {
+        loadStatus.textContent = `${profile.teacherName}: ${profile.scheduledClassCount || 0} saved classes`;
+    }
+}
+
+function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, (character) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;",
+    }[character]));
 }
 
 /**
