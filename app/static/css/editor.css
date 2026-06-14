@@ -1,274 +1,587 @@
-/* Reset all default browser styles */
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+}
+
+:root {
+    --navy-950: #071821;
+    --navy-800: #0e3a4a;
+    --teal-700: #0f766e;
+    --teal-600: #0891b2;
+    --teal-100: #ccfbf1;
+    --teal-50: #ecfeff;
+    --coral: #f9735b;
+    --amber: #f59e0b;
+    --ink: #10202a;
+    --muted: #637582;
+    --line: rgba(14, 58, 74, 0.16);
+    --white: #ffffff;
+    --glass: rgba(255, 255, 255, 0.72);
+    --shadow: 0 24px 70px rgba(7, 24, 33, 0.18);
 }
 
 body {
+    min-height: 100vh;
     font-family: Arial, Helvetica, sans-serif;
-    background-color: #ffffff;
+    color: var(--ink);
+    background:
+        radial-gradient(circle at 12% 12%, rgba(8, 145, 178, 0.24), transparent 28rem),
+        radial-gradient(circle at 86% 8%, rgba(249, 115, 91, 0.18), transparent 24rem),
+        linear-gradient(135deg, #f8fafc 0%, #e6fffb 48%, #fff7ed 100%);
 }
 
-/* Main layout using CSS Grid - divides page into table, faculty panel, week section, and controls */
+.editor-header {
+    min-height: 132px;
+    padding: 30px clamp(20px, 4vw, 58px) 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.editor-header h1 {
+    margin-top: 8px;
+    color: var(--navy-950);
+    font-size: clamp(2rem, 4.6vw, 3.7rem);
+    line-height: 1;
+}
+
+.eyebrow {
+    color: var(--teal-700);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.context-panel {
+    min-width: min(100%, 520px);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    overflow: hidden;
+    background: var(--glass);
+    box-shadow: 0 16px 38px rgba(7, 24, 33, 0.12);
+    backdrop-filter: blur(18px);
+}
+
+.context-panel div {
+    min-width: 0;
+    padding: 16px 18px;
+    border-right: 1px solid var(--line);
+}
+
+.context-panel div:last-child {
+    border-right: none;
+}
+
+.context-panel span {
+    display: block;
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.context-panel strong {
+    display: block;
+    margin-top: 6px;
+    overflow-wrap: anywhere;
+    color: var(--navy-950);
+    font-size: 1rem;
+    line-height: 1.25;
+}
+
+.insight-strip {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.insight-strip div {
+    min-height: 76px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 16px 18px;
+    background: rgba(255, 255, 255, 0.64);
+    box-shadow: 0 14px 34px rgba(7, 24, 33, 0.11);
+    backdrop-filter: blur(18px);
+}
+
+.insight-strip span,
+.faculty-summary {
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.insight-strip strong {
+    display: block;
+    margin-top: 7px;
+    color: var(--navy-950);
+    line-height: 1.25;
+}
+
 main {
-    height: 100vh;
-    width: 100%;
+    width: min(1440px, calc(100% - 32px));
+    min-height: calc(100vh - 154px);
+    margin: 0 auto 28px;
     display: grid;
-    grid-template-columns: 4fr 1fr;
-    grid-template-rows: 1fr auto auto;
+    grid-template-columns: minmax(720px, 1fr) minmax(240px, 300px);
+    grid-template-rows: auto minmax(520px, 1fr) auto;
+    gap: 20px;
 }
 
-/* Table area containing the schedule grid (days, times, subjects) */
+.table-area,
+.faculty-area,
+.week-section,
+.control-area {
+    border: 1px solid var(--line);
+    background: var(--glass);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(18px);
+}
+
 .table-area {
-    grid-row: 1;
-    padding: 15px;
+    min-width: 0;
+    min-height: 0;
+    border-radius: 22px;
+    padding: 16px;
     display: grid;
-    grid-template-columns: repeat(11, 1fr);
-    grid-template-rows: repeat(6, 1fr);
-    overflow-y: auto;
+    grid-template-columns: minmax(82px, 0.8fr) minmax(92px, 0.9fr) repeat(9, minmax(92px, 1fr));
+    grid-template-rows: 64px repeat(5, minmax(82px, 1fr));
+    overflow: auto;
 }
 
-/* Individual boxes in the schedule grid */
+.table-area::-webkit-scrollbar,
+.faculty-area::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.table-area::-webkit-scrollbar-thumb,
+.faculty-area::-webkit-scrollbar-thumb {
+    border: 3px solid var(--white);
+    border-radius: 999px;
+    background: var(--teal-600);
+}
+
 .box {
-    border: 2px solid #9C27B0;
+    min-width: 0;
+    min-height: 64px;
+    border: 1px solid rgba(14, 58, 74, 0.14);
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
     position: relative;
-    min-height: 60px;
+    padding: 8px;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.78);
+    text-align: center;
+    transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Hover effect for empty cells - provides visual feedback when user hovers */
-.box:hover:not(.th):not(.day):not(.recess) {
-    background-color: #f3e5f5;
+.box:hover:not(.th):not(.day):not(.recess):not(.stream-cell) {
+    border-color: rgba(8, 145, 178, 0.46);
+    background: var(--teal-50);
+    box-shadow: inset 0 0 0 2px rgba(8, 145, 178, 0.1);
+    cursor: pointer;
 }
 
-/* Header cells (time slots) */
 .th {
-    width: 100%;
-    height: 50%;
-    margin-top: 30%;
-    font-weight: 700;
-    font-size: 1.2rem;
-    background-color: #e1bee7;
-    color: #4a148c;
+    color: var(--navy-950);
+    background: linear-gradient(180deg, rgba(255,255,255,0.86), var(--teal-100));
+    font-size: clamp(0.72rem, 0.8vw, 0.95rem);
+    font-weight: 800;
 }
 
-/* Day column cells */
 .day {
-    font-weight: 550;
-    background-color: #f3e5f5;
-    color: #6a1b9a;
+    color: var(--navy-950);
+    background: rgba(204, 251, 241, 0.58);
+    font-weight: 800;
 }
 
-/* Recess/break indicator cells */
+.stream-cell,
+.locked-cell {
+    cursor: default;
+}
+
+.schedule-cell {
+    flex-direction: column;
+    gap: 4px;
+}
+
 .recess {
-    color: #6a1b9a;
-    font-weight: 500;
-    font-size: 3rem;
-    background-color: #ede7f6;
+    color: var(--navy-950);
+    background: rgba(255, 237, 213, 0.82);
+    font-size: clamp(1.8rem, 2.6vw, 3rem);
+    font-weight: 800;
+    letter-spacing: 0.04em;
 }
 
-/* Right panel displaying faculty/teacher list */
 .faculty-area {
-    grid-row: 1;
-    width: 100%;
-    height: 100%;
+    min-height: 0;
+    border-radius: 22px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
     overflow-y: auto;
-    border: 2px solid #9C27B0;
-    margin: 10px 0px 0px 0px;
-    padding: 10px;
+}
+
+.search {
+    width: 100%;
+    min-height: 48px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    outline: none;
+    padding: 0 14px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.86);
+    font-size: 0.95rem;
+    box-shadow: 0 10px 22px rgba(7, 24, 33, 0.08);
+}
+
+.search:focus {
+    border-color: var(--teal-600);
+    box-shadow: 0 0 0 4px rgba(8, 145, 178, 0.16);
+}
+
+.faculty-summary {
+    padding: 8px 2px 0;
+    line-height: 1.35;
+}
+
+.teacher-profile {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.74);
+    box-shadow: 0 10px 22px rgba(7, 24, 33, 0.08);
+}
+
+.teacher-profile span {
+    display: block;
+    color: var(--muted);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.teacher-profile strong {
+    display: block;
+    margin-top: 6px;
+    color: var(--navy-950);
+    overflow-wrap: anywhere;
+}
+
+.teacher-profile p,
+.teacher-profile li {
+    margin-top: 7px;
+    color: var(--muted);
+    font-size: 0.78rem;
+    line-height: 1.35;
+}
+
+.teacher-profile ul {
+    margin: 8px 0 0;
+    padding-left: 16px;
+}
+
+.teacher-profile b {
+    color: var(--navy-800);
+}
+
+.card {
+    width: 100%;
+    min-height: 92px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    cursor: pointer;
+    padding: 14px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-evenly;
-    gap: 20px;
-    background-color: #fafafa;
-}
-
-/* Search input field for filtering teachers */
-.search {
-    min-width: 250px;
-    height: 50px;
-    margin-top: 10px;
-    border: 2px solid #9C27B0;
-    padding: 10px;
-    font-size: 1rem;
-    position: sticky;
-    top: 0;
-    background-color: #ffffff;
-    z-index: 10;
-    border-radius: 4px;
-}
-
-/* Teacher/faculty card - draggable item for schedule editing */
-.card {
-    background-color: #f3e5f5;
-    width: 80%;
-    min-height: 100px;
-    margin-bottom: 10px;
-    border: 2px solid #ce93d8;
-    border-radius: 4px;
-    cursor: pointer;
-    padding: 10px;
-    display: flex;
-    align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
-    color: #4a148c;
+    gap: 6px;
+    color: var(--navy-950);
+    background: rgba(255, 255, 255, 0.82);
+    box-shadow: 0 12px 28px rgba(7, 24, 33, 0.08);
+    text-align: center;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease, color 0.22s ease;
 }
 
-/* Visual feedback when hovering over a teacher card */
 .card:hover {
-    background-color: #e1bee7;
-    box-shadow: 0 2px 8px rgba(156, 39, 176, 0.2);
+    border-color: rgba(8, 145, 178, 0.38);
+    background: var(--teal-50);
+    box-shadow: 0 18px 34px rgba(7, 24, 33, 0.14);
+    transform: translateY(-2px);
 }
 
-/* Card selected state - shows when user selects a teacher to add to schedule */
 .card.selected {
-    background-color: #9C27B0;
-    color: white;
-    border-color: #7b1fa2;
+    border-color: transparent;
+    color: var(--white);
+    background: linear-gradient(135deg, var(--teal-600), var(--navy-800));
+    box-shadow: 0 18px 34px rgba(8, 145, 178, 0.26);
 }
 
-/* Bottom control panel for navigation and PDF export */
-.control-area {
-    grid-column: 1 / 3;
-    grid-row: 3;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    border-top: 2px solid #9C27B0;
-    background-color: #fafafa;
+.card-teacher {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    font-weight: 800;
 }
 
-/* Individual control item container */
-.control-item {
-    margin: 25px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
+.card-subject {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    font-size: 0.88rem;
 }
 
-/* OK button - stores schedule JSON in variable */
-.btn-ok button {
-    width: 150px;
-    height: 50px;
-    font-size: 1.2rem;
-    font-weight: 600;
-    cursor: pointer;
-    background-color: #9C27B0;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
+.card-workload {
+    padding: 5px 9px;
+    border-radius: 999px;
+    color: var(--navy-950);
+    background: rgba(204, 251, 241, 0.8);
+    font-size: 0.72rem;
+    font-weight: 800;
 }
 
-.btn-ok button:hover {
-    background-color: #7b1fa2;
+.card.selected .card-workload {
+    color: var(--navy-950);
+    background: rgba(255, 255, 255, 0.82);
 }
 
-.btn-ok button:active {
-    background-color: #6a1b9a;
-    transform: scale(0.98);
+.card-context {
+    max-width: 100%;
+    color: var(--muted);
+    font-size: 0.72rem;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
 }
 
-/* Info display for current week/date range - currently not in use */
-.sheet-info {
-    display: none;
+.card.selected .card-context {
+    color: rgba(255, 255, 255, 0.82);
 }
 
-/* Week section - displayed below the schedule table */
 .week-section {
-    grid-column: 1 / 3;
-    padding: 15px;
-    color: #4a148c;
-    font-size: 1rem;
-    background-color: #f3e5f5;
-    border: 2px solid #9C27B0;
-    border-top: none;
+    grid-column: 1;
+    border-radius: 18px;
+    padding: 18px 24px;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: var(--navy-950);
 }
 
 .week-section h2 {
-    margin: 0;
+    font-size: clamp(1rem, 1.7vw, 1.4rem);
 }
 
-/* PDF download button styling */
-.btn-download button {
-    width: 200px;
-    height: 40px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    background-color: #9C27B0;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
+.control-area {
+    grid-column: 2;
+    border-radius: 18px;
+    padding: 16px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
 }
 
-.btn-download button:hover {
-    background-color: #7b1fa2;
+.control-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Modal/dialog for editing schedule entries */
-.modal {
+.control-item:empty {
     display: none;
-    position: fixed;
-    z-index: 100;
-    left: 0;
-    top: 0;
+}
+
+.btn-ok,
+.btn-download {
     width: 100%;
-    height: 100%;
-    background-color: rgba(156, 39, 176, 0.3);
 }
 
-.modal-content {
-    background-color: #ffffff;
-    margin: 10% auto;
-    padding: 20px;
-    border: 2px solid #9C27B0;
-    width: 300px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(156, 39, 176, 0.2);
-}
-
-.close {
-    color: #9C27B0;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.close:hover {
-    color: #6a1b9a;
-}
-
-/* Schedule entry cell with background highlight */
-.scheduled {
-    background-color: #e1bee7;
-    font-weight: 500;
-    color: #4a148c;
-}
-
-/* JSON export button */
-.btn-export {
-    padding: 10px 20px;
-    background-color: #9C27B0;
-    color: white;
+.btn-ok button,
+.btn-download button {
+    width: 100%;
+    min-height: 48px;
     border: none;
-    border-radius: 4px;
+    border-radius: 14px;
     cursor: pointer;
-    margin-top: 10px;
-    font-size: 1rem;
+    color: var(--white);
+    background: linear-gradient(135deg, var(--teal-600), var(--navy-800));
+    box-shadow: 0 16px 28px rgba(8, 145, 178, 0.24);
+    font-size: 0.95rem;
+    font-weight: 800;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.btn-export:hover {
-    background-color: #7b1fa2;
+.btn-ok button:hover,
+.btn-download button:hover {
+    box-shadow: 0 20px 34px rgba(8, 145, 178, 0.32);
+    transform: translateY(-2px);
+}
+
+.btn-ok button:active,
+.btn-download button:active {
+    transform: translateY(0);
+}
+
+.scheduled {
+    color: var(--navy-950);
+    background: rgba(204, 251, 241, 0.78);
+    font-weight: 600;
+}
+
+.conflict-cell {
+    border-color: var(--coral) !important;
+    background: #fff1f0 !important;
+    box-shadow: inset 0 0 0 2px rgba(249, 115, 91, 0.32);
+}
+
+.scheduled.merge-left {
+    border-left-color: transparent;
+}
+
+.scheduled.merge-right {
+    border-right-color: transparent;
+}
+
+.scheduled.merge-left .cell-subject,
+.scheduled.merge-left .cell-teacher,
+.scheduled.merge-left .cell-content {
+    visibility: hidden;
+}
+
+.cell-content {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: calc(100% * var(--merge-span, 1));
+    padding: 8px 30px 8px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    overflow: hidden;
+    text-align: center;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.cell-subject,
+.cell-teacher {
+    display: block;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    line-height: 1.2;
+    text-wrap: balance;
+    white-space: normal;
+}
+
+.cell-subject {
+    font-size: clamp(0.68rem, 0.85vw, 0.92rem);
+    font-weight: 800;
+}
+
+.cell-teacher {
+    font-size: clamp(0.62rem, 0.78vw, 0.84rem);
+}
+
+.remove-assignment {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 22px;
+    height: 22px;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    color: var(--white);
+    background: var(--navy-800);
+    font-size: 0.75rem;
+    line-height: 22px;
+    z-index: 2;
+}
+
+.remove-assignment:hover {
+    background: var(--coral);
+}
+
+.modal,
+.sheet-info,
+.btn-export {
+    display: none;
+}
+
+@media (max-width: 1100px) {
+    .editor-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    main {
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(520px, 1fr) auto auto;
+    }
+
+    .faculty-area,
+    .control-area,
+    .week-section {
+        grid-column: 1;
+    }
+
+    .faculty-area {
+        max-height: 320px;
+    }
+
+    .control-area {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .editor-header {
+        padding-top: 24px;
+    }
+
+    .context-panel {
+        grid-template-columns: 1fr;
+    }
+
+    .context-panel div {
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .context-panel div:last-child {
+        border-bottom: none;
+    }
+
+    main {
+        width: min(100% - 20px, 560px);
+    }
+
+    .table-area {
+        grid-template-columns: 76px 86px repeat(9, 88px);
+    }
+
+    .insight-strip {
+        grid-template-columns: 1fr;
+    }
+
+    .control-area {
+        grid-template-columns: 1fr;
+    }
 }

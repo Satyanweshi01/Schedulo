@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Schedulo Timetable PDF</title>
+        <style>
+            @page {
+                size: A4 landscape;
+                margin: 10mm;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                font-family: Arial, Helvetica, sans-serif;
+                color: #000000;
+                background: #ffffff;
+            }
+
+            .pdf-page {
+                width: 277mm;
+                min-height: 190mm;
+            }
+
+            .routine-header {
+                display: grid;
+                grid-template-columns: 72px 1fr 72px;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 8px;
+            }
+
+            .college-logo {
+                width: 64px;
+                height: 64px;
+                object-fit: contain;
+            }
+
+            .routine-title {
+                text-align: center;
+            }
+
+            .routine-title h1 {
+                margin: 0;
+                font-size: 22px;
+                letter-spacing: 0;
+                text-transform: uppercase;
+            }
+
+            .routine-title p {
+                margin: 4px 0 0;
+                font-size: 13px;
+                font-weight: 700;
+            }
+
+            .routine-table {
+                width: 100%;
+                border-collapse: collapse;
+                table-layout: fixed;
+            }
+
+            .routine-table th,
+            .routine-table td {
+                border: 1.5px solid #000000;
+                padding: 4px;
+                text-align: center;
+                vertical-align: middle;
+                font-size: 10px;
+                line-height: 1.2;
+                overflow-wrap: anywhere;
+            }
+
+            .routine-table th {
+                background: #f0f0f0;
+                font-size: 11px;
+                font-weight: 700;
+            }
+
+            .day-cell {
+                width: 56px;
+                font-weight: 700;
+                letter-spacing: 0;
+            }
+
+            .stream-cell {
+                width: 84px;
+                font-weight: 700;
+            }
+
+            .routine-entry {
+                height: 76px;
+            }
+
+            .recess-cell {
+                background: #f5f5f5;
+                font-weight: 700;
+                line-height: 1.05;
+            }
+
+            .subject {
+                display: block;
+                font-weight: 700;
+                font-size: 12px;
+            }
+
+            .teacher {
+                display: block;
+                margin-top: 5px;
+                font-size: 11px;
+            }
+
+            .empty-entry {
+                color: #444444;
+            }
+        </style>
+    </head>
+    <body>
+        {% set metadata = payload.get("metadata", {}) %}
+        {% set schedule = payload.get("schedule", {}) %}
+        {% set days = payload.get("days", ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]) %}
+        {% set time_slots = payload.get("timeSlots", []) %}
+        <section class="pdf-page">
+            <header class="routine-header">
+                <img class="college-logo" src="{{ logo_url }}" alt="College logo" />
+                <div class="routine-title">
+                    <h1>{{ college_name }}</h1>
+                    <p>
+                        CLASS ROUTINE
+                        {% if metadata.get("departmentName") or metadata.get("batchName") %}
+                        - {{ metadata.get("departmentName", "") }} {{ metadata.get("batchName", "") }}
+                        {% endif %}
+                        {% if metadata.get("week") %}({{ metadata.get("week") }}){% endif %}
+                    </p>
+                </div>
+                <span></span>
+            </header>
+
+            <table class="routine-table">
+                <thead>
+                    <tr>
+                        <th class="day-cell">DAY/TIME</th>
+                        <th class="stream-cell">STREAM</th>
+                        {% for slot in time_slots %}
+                        <th>{{ slot }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for day in days %}
+                    <tr>
+                        <td class="day-cell">{{ "<br>".join(day.upper()) | safe }}</td>
+                        <td class="stream-cell">{{ metadata.get("departmentName", "Selected Stream") }}</td>
+                        {% for slot in time_slots %}
+                            {% if loop.index0 == 4 %}
+                            <td class="recess-cell">R<br />E<br />C<br />E<br />S<br />S</td>
+                            {% else %}
+                            {% set entry = schedule.get(day, {}).get(slot, {}) %}
+                            <td class="routine-entry">
+                                {% if entry.get("subject") or entry.get("teacher") %}
+                                <span class="subject">{{ entry.get("subject", "") }}</span>
+                                <span class="teacher">{{ entry.get("teacher", "") }}</span>
+                                {% else %}
+                                <span class="empty-entry">-</span>
+                                {% endif %}
+                            </td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </body>
+</html>

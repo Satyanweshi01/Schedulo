@@ -1,70 +1,74 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Landing After Page</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/landing_after.css') }}" />
-    </head>
-    <body>
-        <header class="dashboard-header">
-            <div>
-                <span class="eyebrow">Schedulo workspace</span>
-                <h1>Dashboard</h1>
+{% extends "base.html" %} {% block title %}Schedulo Dashboard{% endblock %} {%
+block extra_styles %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/landing_after.css') }}"
+/>
+{% endblock %} {% block content %}
+<header class="dashboard-header">
+    <div>
+        <span class="eyebrow">Schedulo workspace</span>
+        <h1>Dashboard</h1>
+    </div>
+</header>
+<main>
+    <div class="manage-db-grid-area">
+        <div class="label">Manage Database</div>
+        <div class="manage-db-main">
+            <div class="btn">
+                <a href="{{ url_for('database_edit_form.get_subject') }}">
+                    <button type="submit">Add Subject</button>
+                </a>
             </div>
-        </header>
-        <main>
-            <div class="manage-db-grid-area">
-                <div class="label">
-                    Manage Database
-                </div>
-                <div class="manage-db-main">
-                    <div class="btn">
-                        <a href="{{url_for('database_edit_form.get_subject')}}">
-                            <button type="submit">Add Subject</button>
-                        </a>
-                    </div>
-                    <div class="btn">
-                        <a href="{{url_for('database_edit_form.get_batch')}}">
-                            <button type="submit">Add Batch</button>
-                        </a>
-                    </div>
-                    <div class="btn">
-                        <a href="{{url_for('database_edit_form.get_department')}}">
-                            <button type="submit">Add Department</button>
-                        </a>
-                    </div>
-                    <div class="btn">
-                        <a href="{{url_for('database_edit_form.get_teacher')}}">
-                            <button type="submit">Add Teacher</button>
-                        </a>
-                    </div>
-                    <div class="btn">
-                        <a href="{{url_for('database_edit_form.get_assignment')}}">
-                            <button type="submit">Assign Teacher</button>
-                        </a>
-                    </div>
-                </div>
+            <div class="btn">
+                <a href="{{ url_for('database_edit_form.get_batch') }}">
+                    <button type="submit">Add Batch</button>
+                </a>
             </div>
-            <div class="history-grid-area">
-                <div class="label">
-                    History
-                </div>
-                <div class="history-main">
-                    <div class="history-item">History 1</div>
-                    <div class="history-item">History 2</div>
-                    <div class="history-item">History 3</div>
-                    <div class="history-item">History 4</div>
-                    <div class="history-item">History 5</div>
-                </div>
-                <div class="ctrl-area">
-                    <div class="btn">
-                        <a href="{{url_for('before_editor.get_editor')}}">
-                            <button type="submit">Make a Timetable</button>
-                        </a>
-                    </div>
-                </div>
+            <div class="btn">
+                <a href="{{ url_for('database_edit_form.get_department') }}">
+                    <button type="submit">Add Department</button>
+                </a>
             </div>
-        </main>
-    </body>
-</html>
+            <div class="btn">
+                <a href="{{ url_for('database_edit_form.get_teacher') }}">
+                    <button type="submit">Add Teacher</button>
+                </a>
+            </div>
+            <div class="btn">
+                <a href="{{ url_for('database_edit_form.get_assignment') }}">
+                    <button type="submit">Assign Teacher</button>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="history-grid-area">
+        <div class="label">Saved Timetables</div>
+        <div class="history-main">
+            {% for item in history %}
+            <a
+                class="history-item"
+                href="{{ url_for('editor.index', dept_id=item.dept_id, batch_id=item.batch_id) }}"
+            >
+                <span>{{ item.name }}</span>
+                <strong>{{ item.department }} / {{ item.batch }}</strong>
+                <small>{{ item.entries }} scheduled classes</small>
+            </a>
+            {% else %}
+            <div class="history-item empty-history">
+                <span>No saved timetables yet</span>
+                <strong>Create one from the editor</strong>
+                <small>Saved routines will appear here</small>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="ctrl-area">
+            <div class="btn">
+                <a href="{{ url_for('before_editor.get_editor') }}">
+                    <button type="submit">Make a Timetable</button>
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
