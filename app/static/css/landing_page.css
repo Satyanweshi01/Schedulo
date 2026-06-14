@@ -2,64 +2,87 @@ body {
     margin: 0;
     padding: 0;
     background:
-        radial-gradient(circle at top left, rgba(8, 145, 178, 0.2), transparent 30rem),
+        radial-gradient(
+            circle at top left,
+            rgba(8, 145, 178, 0.2),
+            transparent 30rem
+        ),
         linear-gradient(135deg, #ffffff 0%, #ecfeff 100%);
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    font-family: 'Poppins', sans-serif;
+    justify-content: flex-start;
+    font-family: "Poppins", sans-serif;
+}
+
+.site-header {
+    width: 100%;
 }
 
 /* Removed the box formatting completely */
 .container {
     text-align: center;
-    padding: 20px;
+    padding: 40px 20px 60px;
+    margin: 4rem auto 0;
+    max-width: 480px;
 }
 
 /* Fixed width container prevents layout jumping when fonts change sizes */
 .title-wrapper {
-    width: 380px; 
+    width: 380px;
     margin: 0 auto;
     text-align: left; /* Anchors the typing animation to the left */
 }
 
 .typedtext {
     font-size: 4.5rem;
-    letter-spacing: 3px; 
+    letter-spacing: 3px;
     color: #0e3a4a; /* Font color stays static */
     white-space: nowrap;
     overflow: hidden;
-    margin: 0; 
-    
+    margin: 0;
+
     /* 
       1. typing: Slowed down to 6 seconds for a human feel
       2. style-shift: Cycles through 3 fonts over 18 seconds (6s * 3)
     */
-    animation: 
+    animation:
         typing 6s ease-in-out infinite,
-        style-shift 18s infinite; 
+        style-shift 18s infinite;
 }
 
 /* Animates to 100% of the wrapper (380px), smoothly revealing the text */
 @keyframes typing {
-    0%, 10% { width: 0; }            
-    40%, 60% { width: 100%; }       
-    90%, 100% { width: 0; }          
+    0%,
+    10% {
+        width: 0;
+    }
+    40%,
+    60% {
+        width: 100%;
+    }
+    90%,
+    100% {
+        width: 0;
+    }
 }
 
 /* Cycles through different font styles and families */
 @keyframes style-shift {
-    0%, 33.3% { 
-        font-family: 'Poppins', sans-serif;
+    0%,
+    33.3% {
+        font-family: "Poppins", sans-serif;
         font-style: normal;
     }
-    33.4%, 66.6% { 
-        font-family: 'Courier New', Courier, monospace;
+    33.4%,
+    66.6% {
+        font-family: "Courier New", Courier, monospace;
         font-style: normal;
     }
-    66.7%, 100% { 
-        font-family: 'Georgia', serif;
+    66.7%,
+    100% {
+        font-family: "Georgia", serif;
         font-style: italic;
     }
 }
@@ -74,9 +97,9 @@ body {
 
 /* No animations on the tagline */
 .tagline {
-    font-family: 'Caveat', cursive;
+    font-family: "Caveat", cursive;
     font-size: 2.2rem;
-    color: #637582; 
+    color: #637582;
     margin: 0;
 }
 
@@ -95,10 +118,13 @@ body {
     color: #ffffff;
     background: linear-gradient(135deg, #0891b2, #0e3a4a);
     box-shadow: 0 18px 34px rgba(8, 145, 178, 0.28);
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     font-size: 1rem;
     font-weight: 700;
-    transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+    transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        filter 0.22s ease;
 }
 
 .home-button:hover {

@@ -1,179 +1,168 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Schedulo Editor</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/editor.css') }}" />
-    </head>
-    <body>
-        <header class="editor-header">
-            <div>
-                <span class="eyebrow">Schedulo editor</span>
-                <h1>Timetable Builder</h1>
+{% extends "base.html" %} {% block title %}Schedulo Editor{% endblock %} {%
+block extra_styles %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/editor.css') }}"
+/>
+{% endblock %} {% block content %}
+<header class="editor-header">
+    <div>
+        <span class="eyebrow">Schedulo editor</span>
+        <h1>Timetable Builder</h1>
+    </div>
+    <div class="context-panel" aria-label="Selected timetable context">
+        <div>
+            <span>Department</span>
+            <strong
+                >{{ editor_context.department_name or "Not selected" }}</strong
+            >
+        </div>
+        <div>
+            <span>Batch</span>
+            <strong>{{ editor_context.batch_name or "Not selected" }}</strong>
+        </div>
+        <div>
+            <span>Week</span>
+            <strong>{{ week }}</strong>
+        </div>
+    </div>
+</header>
+<main>
+    <section class="insight-strip" aria-label="Scheduling checks">
+        <div>
+            <span>Teacher guard</span>
+            <strong
+                >Prevents double-booking across departments and batches</strong
+            >
+        </div>
+        <div>
+            <span>Saved routine</span>
+            <strong id="save-status">Ready to edit</strong>
+        </div>
+        <div>
+            <span>Faculty load</span>
+            <strong id="load-status"
+                >{{ cards_json|length }} active assignments</strong
+            >
+        </div>
+    </section>
+
+    <div class="table-area">
+        <div class="box th">Day</div>
+        <div class="box th">STREAM</div>
+        <div class="box th">10:00-10:50</div>
+        <div class="box th">10:50-11:40</div>
+        <div class="box th">11:40-12:30</div>
+        <div class="box th">12:30-1:20</div>
+        <div class="box th">1:20-2:00</div>
+        <div class="box th">2:00-2:50</div>
+        <div class="box th">2:50-3:40</div>
+        <div class="box th">3:40-4:30</div>
+        <div class="box th">4:30-5:20</div>
+
+        <div class="box day">Monday</div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box recess">RE</div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+
+        <div class="box day">Tuesday</div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box recess">C</div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+
+        <div class="box day">Wednesday</div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box recess">E</div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+
+        <div class="box day">Thursday</div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box recess">S</div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+
+        <div class="box day">Friday</div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box recess">S</div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+    </div>
+
+    <div class="faculty-area">
+        <input type="text" class="search" placeholder="Search teachers..." />
+        <div class="faculty-summary">
+            Select a teacher-subject card. Cards include the teacher's total
+            workload.
+        </div>
+        <div class="teacher-profile" id="teacher-profile" aria-live="polite">
+            <span>Teacher profile</span>
+            <strong>Select a teacher</strong>
+            <p>
+                Workload and conflicts are checked from the saved database
+                timetable.
+            </p>
+        </div>
+    </div>
+
+    <div class="week-section">
+        <h2>{{ week }}</h2>
+    </div>
+
+    <div class="control-area">
+        <div class="control-item">
+            <div class="btn-ok">
+                <button title="Store schedule JSON for backend submission">
+                    Save
+                </button>
             </div>
-            <div class="context-panel" aria-label="Selected timetable context">
-                <div>
-                    <span>Department</span>
-                    <strong>{{ editor_context.department_name or "Not selected" }}</strong>
-                </div>
-                <div>
-                    <span>Batch</span>
-                    <strong>{{ editor_context.batch_name or "Not selected" }}</strong>
-                </div>
-                <div>
-                    <span>Week</span>
-                    <strong>{{ week }}</strong>
-                </div>
+        </div>
+        <div class="control-item"></div>
+        <div class="control-item">
+            <div class="btn-download">
+                <button title="Download schedule as PDF">Download PDF</button>
             </div>
-        </header>
-        <main>
-            <section class="insight-strip" aria-label="Scheduling checks">
-                <div>
-                    <span>Teacher guard</span>
-                    <strong>Prevents double-booking across departments and batches</strong>
-                </div>
-                <div>
-                    <span>Saved routine</span>
-                    <strong id="save-status">Ready to edit</strong>
-                </div>
-                <div>
-                    <span>Faculty load</span>
-                    <strong id="load-status">{{ cards_json|length }} active assignments</strong>
-                </div>
-            </section>
-
-            <!-- Schedule Grid Section: displays timetable with days, time slots, and subject entries -->
-            <div class="table-area">
-                <!-- Header row: Day, Stream, and Time Slots -->
-                <div class="box th">Day</div>
-                <div class="box th">STREAM</div>
-                <div class="box th">10:00-10:50</div>
-                <div class="box th">10:50-11:40</div>
-                <div class="box th">11:40-12:30</div>
-                <div class="box th">12:30-1:20</div>
-                <div class="box th">1:20-2:00</div>
-                <div class="box th">2:00-2:50</div>
-                <div class="box th">2:50-3:40</div>
-                <div class="box th">3:40-4:30</div>
-                <div class="box th">4:30-5:20</div>
-
-                <!-- Monday Row: 1 day column + 1 stream column + 9 time slot cells -->
-                <div class="box day">Monday</div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box recess">RE</div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box"></div>
-
-                <!-- Tuesday Row -->
-                <div class="box day">Tuesday</div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box recess">C</div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box"></div>
-
-                <!-- Wednesday Row -->
-                <div class="box day">Wednesday</div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box recess">E</div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box"></div>
-
-                <!-- Thursday Row -->
-                <div class="box day">Thursday</div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box recess">S</div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box"></div>
-
-                <!-- Friday Row -->
-                <div class="box day">Friday</div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box recess">S</div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box"></div>
-                <div class="box"></div>
-            </div>
-
-            <!-- Faculty Panel: displays list of teachers for assignment to schedule -->
-            <div class="faculty-area">
-                <!-- Search box for filtering teachers by name -->
-                <input type="text" class="search" placeholder="Search teachers..." />
-                <div class="faculty-summary">
-                    Select a teacher-subject card. Cards include the teacher's total workload.
-                </div>
-                <div class="teacher-profile" id="teacher-profile" aria-live="polite">
-                    <span>Teacher profile</span>
-                    <strong>Select a teacher</strong>
-                    <p>Workload and conflicts are checked from the saved database timetable.</p>
-                </div>
-                <!-- Teacher cards are dynamically generated by JavaScript -->
-            </div>
-
-            <!-- Week Section: displays current week, positioned below the schedule -->
-            <div class="week-section">
-                <h2>{{week}}</h2>
-            </div>
-
-            <!-- Control Panel: buttons for storing JSON and PDF export -->
-            <div class="control-area">
-                <!-- Left Control: OK Button to store JSON in variable -->
-                <div class="control-item">
-                    <div class="btn-ok">
-                        <button title="Store schedule JSON for backend submission">Save</button>
-                    </div>
-                </div>
-
-                <!-- Center Control: Placeholder/Info -->
-                <div class="control-item">
-                    <!-- Reserved for future use -->
-                </div>
-
-                <!-- Right Control: Export to PDF -->
-                <div class="control-item">
-                    <div class="btn-download">
-                        <button title="Download schedule as PDF">Download PDF</button>
-                    </div>
-                </div>
-            </div>
-        </main>
-        <script>
-            const initialEditorState = {{ initial_editor_state | tojson }};
-            const cards = initialEditorState.cards;
-            const editorContext = {{ editor_context | tojson }};
-            const savedSchedule = initialEditorState.savedSchedule;
-            const teacherConflicts = initialEditorState.teacherConflicts;
-        </script>
-        <!-- Load the editor JavaScript after DOM is loaded -->
-        <script src="{{ url_for('static', filename='js/editor.js') }}"></script>
-    </body>
-</html>
+        </div>
+    </div>
+</main>
+<script>
+    const initialEditorState = {{ initial_editor_state | tojson }};
+    const cards = initialEditorState.cards;
+    const editorContext = {{ editor_context | tojson }};
+    const savedSchedule = initialEditorState.savedSchedule;
+    const teacherConflicts = initialEditorState.teacherConflicts;
+</script>
+<script src="{{ url_for('static', filename='js/editor.js') }}"></script>
+{% endblock %}

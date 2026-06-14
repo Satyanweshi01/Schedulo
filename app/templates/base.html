@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{% block title %}Schedulo{% endblock %}</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}" />
+        {% block extra_styles %}{% endblock %}
+    </head>
+    <body>
+        <header class="site-header">
+            <a class="brand" href="{{ url_for('landing page.home') }}">Schedulo</a>
+            <nav class="site-nav" aria-label="Primary navigation">
+                <div class="site-nav-group">
+                    <a href="{{ url_for('landing_after.index') }}">Dashboard</a>
+                    <a href="{{ url_for('database_edit_form.get_subject') }}">Subjects</a>
+                    <a href="{{ url_for('database_edit_form.get_batch') }}">Batches</a>
+                    <a href="{{ url_for('database_edit_form.get_teacher') }}">Teachers</a>
+                    <a href="{{ url_for('database_edit_form.get_assignment') }}">Assignments</a>
+                </div>
+                <div class="site-nav-group right-links">
+                    <a href="#">Login</a>
+                    <a href="#">Register</a>
+                </div>
+            </nav>
+        </header>
+        {% block content %}{% endblock %}
+    </body>
+</html>

@@ -1,69 +1,68 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Database Edit Form</title>
-        <link
-            rel="stylesheet"
-            href="{{ url_for('static', filename='css/teacher.css') }}"
-        />
-    </head>
-    <body>
-        <header class="page-header">
+{% extends "base.html" %} {% block title %}Manage Teachers{% endblock %} {%
+block extra_styles %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/teacher.css') }}"
+/>
+{% endblock %} {% block content %}
+<header class="page-header">
+    <div>
+        <span class="eyebrow">Schedulo database</span>
+        <h2>Manage Teachers</h2>
+    </div>
+</header>
+<main class="teacher-page">
+    <form
+        class="teacher-form"
+        method="POST"
+        action="{{ url_for('database_edit_form.get_teacher') }}"
+    >
+        <div class="panel-heading">
+            <span class="panel-icon">+</span>
             <div>
-                <span class="eyebrow">Schedulo database</span>
-                <h2>Manage Teachers</h2>
+                <h3>Add Teacher</h3>
+                <p>Create a teacher record for subject assignments.</p>
             </div>
-        </header>
-        <main class="teacher-page">
-            <!--here the form renders-->
-            <form class="teacher-form" method="POST" action="{{ url_for('database_edit_form.get_teacher') }}">
-                <div class="panel-heading">
-                    <span class="panel-icon">+</span>
-                    <div>
-                        <h3>Add Teacher</h3>
-                        <p>Create a teacher record for subject assignments.</p>
+        </div>
+        {{ form.csrf_token }}
+        <div class="field-group">
+            {{ form.name.label }} {{ form.name(size=30, placeholder="e.g. Dr.
+            Aditi Sen") }}
+        </div>
+        <input type="submit" value="Save Teacher" />
+    </form>
+    <div class="curr-data-area">
+        <div class="curr-data-heading">
+            <div>
+                <span class="eyebrow">Live records</span>
+                <h3>Current Database</h3>
+            </div>
+        </div>
+        <div class="curr-data-main">
+            {% for i in data %}
+            <div class="card">
+                <div class="card-content">
+                    <div class="content-part">
+                        <span>Teacher</span>
+                        <strong>{{ i.name }}</strong>
                     </div>
                 </div>
-                {{ form.csrf_token }}
-                <div class="field-group">
-                    {{ form.name.label }}
-                    {{ form.name(size=30, placeholder="e.g. Dr. Aditi Sen") }}
-                </div>
-                <input type="submit" value="Save Teacher">
-            </form>
-            <div class="curr-data-area">
-                <div class="curr-data-heading">
-                    <div>
-                        <span class="eyebrow">Live records</span>
-                        <h3>Current Database</h3>
-                    </div>
-                </div>
-                <div class="curr-data-main">
-                    {% for i in data %}
-                    <div class="card">
-                        <div class="card-content">
-                            <div class="content-part">
-                                <span>Teacher</span>
-                                <strong>{{ i.name }}</strong>
-                            </div>
-                        </div>
-                        <!--<div class="card-edit" title="Edit"><button></button></div>-->
-                        <div class="card-delete" title="Delete">
-                            <form action="{{url_for('database_edit_form.delete_teacher',id=i.teacher_id)}}" method="POST">
-                                <button type = "submit"></button>
-                            </form>
-                        </div>
-                    </div>
-                    {% else %}
-                    <div class="empty-state">
-                        <h3>No teachers yet</h3>
-                        <p>Add your first teacher to start building assignments.</p>
-                    </div>
-                    {% endfor %}
+                <div class="card-delete" title="Delete">
+                    <form
+                        action="{{ url_for('database_edit_form.delete_teacher', id=i.teacher_id) }}"
+                        method="POST"
+                    >
+                        <button type="submit"></button>
+                    </form>
                 </div>
             </div>
-        </main>
-    </body>
-</html>
+            {% else %}
+            <div class="empty-state">
+                <h3>No teachers yet</h3>
+                <p>Add your first teacher to start building assignments.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+{% endblock %}

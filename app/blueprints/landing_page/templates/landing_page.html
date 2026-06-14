@@ -1,22 +1,23 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Schedulo</title>
-        <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Poppins:wght@700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="{{url_for('static',filename='css/landing_page.css')}}">
-    </head>
-    <body>
-        <div class="container">
-            <!-- NEW: Wrapper keeps text aligned properly when fonts change -->
-            <div class="title-wrapper">
-                <h1 class="typedtext">Schedulo</h1>
-            </div>
-            <div class="tagline-wrapper">
-                <p class="tagline">Make a schedule on the go</p>
-            </div>
-            <a class="home-link" href="{{url_for('landing_after.index')}}">
-                <button class="home-button" type="submit">Go to home page</button>
-            </a>
-        </div>
-    </body>
-</html>
+{% extends "base.html" %} {% block title %}Schedulo{% endblock %} {% block
+extra_styles %}
+<link
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Poppins:wght@700&display=swap"
+    rel="stylesheet"
+/>
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/landing_page.css') }}"
+/>
+{% endblock %} {% block content %}
+<div class="container">
+    <div class="title-wrapper">
+        <h1 class="typedtext">Schedulo</h1>
+    </div>
+    <div class="tagline-wrapper">
+        <p class="tagline">Make a schedule on the go</p>
+    </div>
+    <a class="home-link" href="{{ url_for('landing_after.index') }}">
+        <button class="home-button" type="submit">Go to home page</button>
+    </a>
+</div>
+{% endblock %}
