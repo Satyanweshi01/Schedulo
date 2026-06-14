@@ -1,11 +1,13 @@
 from . import before_editor_bp
 from flask import render_template, redirect, url_for
+from flask_login import login_required
 from .services import USERFORM
 from ...extensions import db # for database
 from ...models import * # data models
 from ..database_edit_form.services import all_data
 
 @before_editor_bp.route("/userform",methods=["GET","POST"])
+@login_required
 def get_editor():
     user_form = USERFORM()
     # to popolate department option

@@ -1,12 +1,13 @@
 from . import landing_after_bp # from current package importing the landing_after_bp from __init__
 from flask import render_template
+from flask_login import current_user, login_required
 from ..database_edit_form import routes # importing routes for the database_edit_form for the intra page linkage
 from ...extensions import db
 from ...models import Batch, Department, TimeTableEntry, Timetable
-from flask_login import current_user
 
 
 @landing_after_bp.route("/")
+@login_required
 def index():
     stmt = (
         db.select(Timetable, Department, Batch)

@@ -13,7 +13,7 @@ from reportlab.platypus import Image, Paragraph, SimpleDocTemplate, Spacer, Tabl
 from .services import week
 from ...extensions import db
 from ...models import *
-from flask_login import current_user
+from flask_login import current_user, login_required
 
 
 DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
@@ -31,6 +31,7 @@ TIME_SLOTS = [
 
 
 @editor_bp.route("/")
+@login_required
 def index():
     # week data
     current_week = week()
@@ -61,6 +62,7 @@ def index():
 
 
 @editor_bp.route("/save", methods=["POST"])
+@login_required
 def save_timetable():
     payload = request.get_json(silent=True) or {}
     metadata = payload.get("metadata", {})
@@ -108,6 +110,7 @@ def save_timetable():
     return jsonify({"ok": True, "message": f"Saved {saved_count} scheduled classes."})
 
 @editor_bp.route("/api/check_teacher_conflict", methods=["POST"])
+@login_required
 def check_teacher_conflict():
     payload = request.get_json(silent=True) or {}
     teacher_id = payload.get("teacherId")
@@ -139,6 +142,7 @@ def check_teacher_conflict():
 
 
 @editor_bp.route("/api/teacher/<int:teacher_id>/profile")
+@login_required
 def teacher_profile(teacher_id):
     timetable_name = request.args.get("week") or week()
     dept_id = request.args.get("dept_id", type=int)
@@ -152,6 +156,7 @@ def teacher_profile(teacher_id):
 
 
 @editor_bp.route("/pdf", methods=["GET", "POST"])
+@login_required
 def pdf_preview():
     payload = request.get_json(silent=True) or {}
     return render_template(
@@ -163,6 +168,7 @@ def pdf_preview():
 
 
 @editor_bp.route("/export_pdf", methods=["POST"])
+@login_required
 def export_pdf():
     payload = request.get_json(silent=True) or {}
     pdf_file = build_timetable_pdf(payload)
