@@ -7,8 +7,8 @@ from ...models import * # data models
 
 
 # this route for batch
-@login_required
 @database_edit_form_bp.route("/batch/add",methods=["GET","POST"])
+@login_required
 def get_batch():
     batch_form = BATCH()
     # for adding batch
@@ -21,8 +21,8 @@ def get_batch():
     return render_template("batch_db.html",form = batch_form,data=reversed(all_data(Batch,Batch.batch_id)))
 
 # this route for teacher
-@login_required
 @database_edit_form_bp.route("/teacher/add", methods=["GET","POST"])
+@login_required
 def get_teacher():
     teacher_form = TEACHER()
     # for adding teacher
@@ -36,8 +36,8 @@ def get_teacher():
 
 
 # this route for department
-@login_required
 @database_edit_form_bp.route("/department/add",methods=["GET","POST"])
+@login_required
 def get_department():
     department_form = DEPARTMENT()
     # for adding department
@@ -50,8 +50,8 @@ def get_department():
     return render_template("department_db.html",form = department_form,data=reversed(all_data(Department,Department.dept_id)))
 
 # this route for subject
-@login_required
 @database_edit_form_bp.route("/subject/add", methods=["GET","POST"])
+@login_required
 def get_subject():
     subject_form = SUBJECT()
     # for adding subject
@@ -67,8 +67,8 @@ def get_subject():
     return render_template("subject_db.html",form = subject_form,data=reversed(all_data(Subject,Subject.subject_id)))
 
 # this route for assignment 
-@login_required
 @database_edit_form_bp.route("/assignment/add",methods=["GET","POST"])
+@login_required
 def get_assignment():
     teacher_assignment_form = TEACHERASSIGNMENT()
     
@@ -101,8 +101,8 @@ def get_assignment():
     return render_template("teacher_assignment_db.html",form = teacher_assignment_form, data=reversed(all_data(TeacherAssignment,TeacherAssignment.assignment_id)))
 
 # delete route for batch
-@login_required
 @database_edit_form_bp.route("/batch/delete/<int:id>", methods=["POST"])
+@login_required
 def delete_batch(id):
     batch_to_delete = db.session.execute(db.select(Batch).where(Batch.batch_id==id)).scalar()
     print(id)
@@ -112,8 +112,8 @@ def delete_batch(id):
     return redirect(url_for('.get_batch'))
 
 # delete route for teacher
-@login_required
 @database_edit_form_bp.route("/teacher/delete/<int:id>", methods=["POST"])
+@login_required
 def delete_teacher(id):
     teacher_to_delete = db.session.execute(db.select(Teacher).where(Teacher.teacher_id==id)).scalar()
     db.session.delete(teacher_to_delete)
@@ -121,8 +121,8 @@ def delete_teacher(id):
     return redirect(url_for('.get_teacher'))
 
 # delete route for department
-@login_required
 @database_edit_form_bp.route("/department/delete/<int:id>", methods=["POST"])
+@login_required
 def delete_department(id):
     department_to_delete = db.session.execute(db.select(Department).where(Department.dept_id==id)).scalar()
     db.session.delete(department_to_delete)
@@ -130,8 +130,8 @@ def delete_department(id):
     return redirect(url_for('.get_department'))
 
 # delete route for subject
-@login_required
 @database_edit_form_bp.route("/subject/delete/<int:id>", methods=["POST"])
+@login_required
 def delete_subject(id):
     subject_to_delete = db.session.execute(db.select(Subject).where(Subject.subject_id==id)).scalar()
     db.session.delete(subject_to_delete)
@@ -139,8 +139,8 @@ def delete_subject(id):
     return redirect(url_for('.get_subject'))
 
 # delete route for assignment
-@login_required
 @database_edit_form_bp.route("/assignment/delete/<int:id>", methods=["POST"])
+@login_required
 def delete_assignment(id):
     assignment_to_delete = db.session.execute(db.select(TeacherAssignment).where(TeacherAssignment.assignment_id == id)).scalar()
     db.session.delete(assignment_to_delete)
