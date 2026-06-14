@@ -22,3 +22,9 @@ class Timetable(db.Model):
         ForeignKey("batches.batch_id"),
         nullable=False
     )
+    # track owning user
+    created_by: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("users.id"),
+        nullable=True,
+    )

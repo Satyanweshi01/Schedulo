@@ -6,3 +6,4 @@ from .teacherassignments import TeacherAssignment
 from .timeslot import Timeslot
 from .timetable_entry import TimeTableEntry
 from .timetable import Timetable
+from .user import User

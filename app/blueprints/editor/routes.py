@@ -13,6 +13,7 @@ from reportlab.platypus import Image, Paragraph, SimpleDocTemplate, Spacer, Tabl
 from .services import week
 from ...extensions import db
 from ...models import *
+from flask_login import current_user
 
 
 DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
@@ -370,6 +371,12 @@ def get_or_create_timetable(name, dept_id, batch_id):
         return timetable
 
     timetable = Timetable(name=name, dept_id=dept_id, batch_id=batch_id)
+    # assign owner if logged in
+    try:
+        if current_user and current_user.is_authenticated:
+            timetable.created_by = current_user.id
+    except Exception:
+        pass
     db.session.add(timetable)
     db.session.flush()
     return timetable

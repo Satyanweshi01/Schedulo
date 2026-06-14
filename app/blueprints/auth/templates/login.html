@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<main class="auth-page" style="display:flex;align-items:center;justify-content:center;min-height:60vh;padding:40px;">
+    <form method="POST" style="max-width:420px;width:100%;background:var(--surface);padding:24px;border-radius:12px;box-shadow:var(--shadow);">
+        <h2>Login</h2>
+        <div class="field">
+            <label>Username</label>
+            <input name="username" required />
+        </div>
+        <div class="field">
+            <label>Password</label>
+            <input name="password" type="password" required />
+        </div>
+        <div style="margin-top:14px;display:flex;gap:8px;">
+            <button type="submit">Login</button>
+            <a href="{{ url_for('auth.register') }}">Register</a>
+        </div>
+    </form>
+</main>
+{% endblock %}
